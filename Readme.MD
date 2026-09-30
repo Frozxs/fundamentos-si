@@ -1,4 +1,4 @@
-Markdown# 🛒 Documento Técnico de Arquitetura (DTA) — Parte 4
+# 🛒 Documento Técnico de Arquitetura (DTA) — Parte 4
 > **Projeto:** Supermercado Autônomo (*Grab-and-Go*)  
 > **Curso:** Bacharelado em Sistemas de Informação  
 > **Módulo:** Mensageria Distribuída, Resiliência e Tratamento de Exceções  
@@ -70,7 +70,28 @@ flowchart TD
         EX4["4. Falha mTLS"] --> DROP["Encerra Socket + Registro de Segurança"]
         EX5["5. Recusa no Pagamento"] --> LOCK2["Trava Catraca de Saída + Notificação App"]
     end
-3. O Algoritmo-Mãe (Metodologia)O Algoritmo-Mãe é o método sequencial que orienta o projeto da camada de mensageria, garantindo padronização desde o modelo de dados até os cenários de falha.3.1 Entradas e SaídasTipoElementoDescriçãoEntradaTopologiaDefinição dos brokers (MQTT local e Kafka Cloud)EntradaContratosEstrutura dos payloads e tipos de eventosEntradaMatriz de FalhasMapeamento das exceções operacionais e de segurançaSaídaData ContractsTipos de dados (structs e enums) definidos em CSaídaCore EngineRotina de publicação com tratamento de fallbackSaídaHandlersFunções isoladas para tratamento dos 5 cenários de erro3.2 Passos do MétodoSnippet de códigogantt
+
+```
+
+## 3. O Algoritmo-Mãe (Metodologia)
+
+O **Algoritmo-Mãe** é o método sequencial que orienta o projeto da camada de mensageria, garantindo padronização desde o modelo de dados até os cenários de falha.
+
+### 3.1 Entradas e Saídas
+
+| **Tipo**    | **Elemento**       | **Descrição**                                           |
+| ----------- | ------------------ | ------------------------------------------------------- |
+| **Entrada** | `Topologia`        | Definição dos brokers (MQTT local e Kafka Cloud)        |
+| **Entrada** | `Contratos`        | Estrutura dos payloads e tipos de eventos               |
+| **Entrada** | `Matriz de Falhas` | Mapeamento das exceções operacionais e de segurança     |
+| **Saída**   | `Data Contracts`   | Tipos de dados (`structs` e `enums`) definidos em C     |
+| **Saída**   | `Core Engine`      | Rotina de publicação com tratamento de fallback         |
+| **Saída**   | `Handlers`         | Funções isoladas para tratamento dos 5 cenários de erro |
+
+### 3.2 Passos do Método
+
+```mermaid
+gantt
     title Execução do Algoritmo-Mãe
     dateFormat X
     axisFormat %s
@@ -80,7 +101,29 @@ flowchart TD
     3. Engine Offline (SQLCipher)  :p3, 2, 3
     4. Trato de Exceções           :p4, 3, 4
     5. Sync Worker (Flush)         :p5, 4, 5
-Mapeamento dos Contratos: Definir as estruturas de dados para as mensagens da borda e da nuvem.Desenvolvimento do Canal Principal: Implementar o envio no broker MQTT local para garantir baixíssima latência.Construção do Mecanismo de Fallback: Criar o desvio automático para o banco de dados SQLCipher caso a rede WAN falhe.Implementação da Central de Exceções: Desenvolver as regras de contenção para cada um dos 5 cenários críticos do projeto.Criação da Rotina de Sincronização: Implementar o worker em segundo plano para descarregar (flush) o banco local para a nuvem quando a internet reestabelecer.3.3 Matriz de Validação[x] Comunicação de Borda: Payload leve via MQTT especificado.[x] Fallback Transacional: Gravação offline em banco criptografado (SQLCipher) funcional.[x] Tratamento de Exceções: 100% dos 5 cenários mapeados e tratados individualmente.[x] Sintaxe do Código: Pseudocódigo em C limpo, estruturado, tipado e legível.[x] Política de Segurança: Modelo Fail-Safe aplicado em todas as falhas físicas e de software.4. Especificação Técnica Completa em Pseudocódigo CC/* ============================================================================
+
+```
+
+1. **Mapeamento dos Contratos:** Definir as estruturas de dados para as mensagens da borda e da nuvem.
+2. **Desenvolvimento do Canal Principal:** Implementar o envio no broker MQTT local para garantir baixíssima latência.
+3. **Construção do Mecanismo de Fallback:** Criar o desvio automático para o banco de dados SQLCipher caso a rede WAN falhe.
+4. **Implementação da Central de Exceções:** Desenvolver as regras de contenção para cada um dos 5 cenários críticos do projeto.
+5. **Criação da Rotina de Sincronização:** Implementar o worker em segundo plano para descarregar (*flush*) o banco local para a nuvem quando a internet reestabelecer.
+
+### 3.3 Matriz de Validação
+
+- [x] **Comunicação de Borda:** Payload leve via MQTT especificado.
+- [x] **Fallback Transacional:** Gravação offline em banco criptografado (SQLCipher) funcional.
+- [x] **Tratamento de Exceções:** 100% dos 5 cenários mapeados e tratados individualmente.
+- [x] **Sintaxe do Código:** Pseudocódigo em C limpo, estruturado, tipado e legível.
+- [x] **Política de Segurança:** Modelo Fail-Safe aplicado em todas as falhas físicas e de software.
+
+## 4. Especificação Técnica Completa em Pseudocódigo C
+
+C
+
+```
+/* ============================================================================
  * PROJETO: SUPERMERCADO AUTÔNOMO (DTA PARTE 4)
  * MÓDULO: MENSAGERIA, RESILIÊNCIA E TRATAMENTO DE EXCEÇÕES
  * LINGUAGEM: PSEUDOCÓDIGO ESTRUTURADO EM C
@@ -414,4 +457,19 @@ int main() {
 
     return 0;
 }
-5. Matriz de Exceções e Ações Fail-SafeIDExceçãoGatilhoImpactoAção de Mitigação (Fail-Safe)1FALHA_CONEXAO_WANPerda de sinal com a nuvemPerda de sincronia globalEntra no modo Store-and-Forward e salva localmente no SQLCipher.2DISCREPANCIA_PESO_VISAO$\Delta \text{peso} \neq \text{item visto}$Risco de inconsistência/perdaPausa o carrinho e notifica o painel do operador para checagem.3TIMEOUT_CATRACATempo na catraca $> 100\text{ms}$Liberação pendenteCancela a sessão de entrada e mantém a catraca travada.4FALHA_AUTENTICACAO_MTLSCertificado X.509 rejeitadoAcesso não autorizadoDerruba o socket da conexão e gera alerta de auditoria de segurança.5ERRO_TOKEN_PAGAMENTOTransação recusada no gatewayRisco de inadimplênciaMantém a catraca de saída bloqueada e envia notificação no app do cliente.💻 Desenvolvido para compor a Parte 4 do Documento Técnico de Arquitetura (DTA).Sinta-se à vontade para clonar, adaptar e utilizar na sua apresentação acadêmica ou documentação de projeto.
+
+```
+
+## 5. Matriz de Exceções e Ações Fail-Safe
+
+| **ID** | **Exceção**               | **Gatilho**                                 | **Impacto**                   | **Ação de Mitigação (Fail-Safe)**                                              |
+| ------ | ------------------------- | ------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------ |
+| **1**  | `FALHA_CONEXAO_WAN`       | Perda de sinal com a nuvem                  | Perda de sincronia global     | Entra no modo *Store-and-Forward* e salva localmente no SQLCipher.             |
+| **2**  | `DISCREPANCIA_PESO_VISAO` | $\Delta \text{peso} \neq \text{item visto}$ | Risco de inconsistência/perda | Pausa o carrinho e notifica o painel do operador para checagem.                |
+| **3**  | `TIMEOUT_CATRACA`         | Tempo na catraca $> 100\text{ms}$           | Liberação pendente            | Cancela a sessão de entrada e mantém a catraca **travada**.                    |
+| **4**  | `FALHA_AUTENTICACAO_MTLS` | Certificado X.509 rejeitado                 | Acesso não autorizado         | Derruba o socket da conexão e gera alerta de auditoria de segurança.           |
+| **5**  | `ERRO_TOKEN_PAGAMENTO`    | Transação recusada no gateway               | Risco de inadimplência        | Mantém a catraca de saída **bloqueada** e envia notificação no app do cliente. |
+
+> 💻 **Desenvolvido para compor a Parte 4 do Documento Técnico de Arquitetura (DTA).**
+>
+> *Sinta-se à vontade para clonar, adaptar e utilizar na sua apresentação acadêmica ou documentação de projeto.*

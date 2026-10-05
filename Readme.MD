@@ -1,114 +1,118 @@
+<div align="center">
+
 # Sistema de Mensageria e Tratamento de Exceções — Supermercado Autônomo
 
-> **Desenvolvimento da Parte 4 — Mensageria e Exceções**  
-> **Área:** Sistemas de Informação  
-> **Abordagem:** Pseudocódigo estruturado  
-> **Nível:** Técnico-acadêmico
+[![Área: Sistemas de Informacao](https://img.shields.io/badge/Area-Sistemas%20de%20Informacao-blue?style=for-the-badge&logo=bookstack)](https://github.com)
+[![Abordagem: Pseudocodigo](https://img.shields.io/badge/Abordagem-Pseudocodigo%20Estruturado-orange?style=for-the-badge&logo=codeforces)](https://github.com)
+[![Nivel: Tecnico-Academico](https://img.shields.io/badge/Nivel-Tecnico%20Academico-success?style=for-the-badge&logo=academia)](https://github.com)
+[![Arquitetura: Edge-first](https://img.shields.io/badge/Arquitetura-Edge--first-purple?style=for-the-badge&logo=cloud-flare)](https://github.com)
+
+</div>
 
 ---
 
-## 1. Introdução
+## 1. Introducao
 
-Este documento apresenta o desenvolvimento da **Parte 4 — Mensageria e Exceções** da arquitetura de um sistema de supermercado autônomo.
+Este documento apresenta o desenvolvimento da **Parte 4 — Mensageria e Excecoes** da arquitetura de um sistema de supermercado autonomo.
 
-O sistema utiliza uma arquitetura **Edge-first**, na qual o processamento principal do terminal de autoatendimento ocorre localmente, reduzindo a dependência de conectividade externa para as operações que não exigem autorização síncrona.
+O sistema utiliza uma arquitetura **Edge-first**, na qual o processamento principal do terminal de autoatendimento ocorre localmente, reduzindo a dependencia de conectividade externa para as operacoes que nao exigem autorizacao sincrona.
 
-A comunicação entre os terminais e os dispositivos dos funcionários é realizada por uma arquitetura de mensageria assíncrona e bidirecional, utilizando comunicação local de baixa latência e mecanismos de fallback pela infraestrutura de nuvem.
+A comunicacao entre os terminais e os dispositivos dos funcionarios e realizada por uma arquitetura de mensageria assincrona e bidirecional, utilizando comunicacao local de baixa latencia e mecanismos de fallback pela infraestrutura de nuvem.
 
-O desenvolvimento apresentado neste documento tem como objetivo transformar a arquitetura técnica fornecida em um **algoritmo-mãe**, capaz de representar:
+O desenvolvimento apresentado neste documento tem como objetivo transformar a arquitetura tecnica fornecida em um **algoritmo-mae**, capaz de representar:
 
 - funcionamento normal do terminal;
-- comunicação local;
-- detecção de exceções;
-- geração de alertas;
-- comunicação com funcionários;
-- execução de comandos de resolução;
+- comunicacao local;
+- deteccao de excecoes;
+- geracao de alertas;
+- comunicacao com funcionarios;
+- execucao de comandos de resolucao;
 - fallback pela nuvem;
-- recuperação da comunicação;
-- tratamento das cinco principais exceções especificadas;
-- auditoria e rastreabilidade das ações.
+- recuperacao da comunicacao;
+- tratamento das cinco principais excecoes especificadas;
+- auditoria e rastreabilidade das acoes.
 
-O algoritmo é apresentado em **pseudocódigo estruturado**, não estando vinculado a uma linguagem de programação específica.
+O algoritmo e apresentado em **pseudocodigo estruturado**, nao estando vinculado a uma linguagem de programacao especifica.
 
 ---
 
-# 2. Objetivo
+## 2. Objetivo
 
-O objetivo principal é modelar o comportamento do sistema de mensageria e tratamento de exceções de maneira sistemática.
+O objetivo principal e modelar o comportamento do sistema de mensageria e tratamento de excecoes de maneira sistematica.
 
 O algoritmo deve representar o ciclo completo:
 
 ```text
 EVENTO
    ↓
-DETECÇÃO
+DETECCAO
    ↓
-CLASSIFICAÇÃO
+CLASSIFICACAO
    ↓
-DECISÃO
+DECISAO
    ↓
-ALTERAÇÃO DE ESTADO
+ALTERACAO DE ESTADO
    ↓
-GERAÇÃO DE MENSAGEM
+GERACAO DE MENSAGEM
    ↓
 ROTEAMENTO
    ↓
-FUNCIONÁRIO
+FUNCIONARIO
    ↓
-AÇÃO
+ACAO
    ↓
 COMANDO
    ↓
 TERMINAL
    ↓
-VALIDAÇÃO
+VALIDACAO
    ↓
-RESOLUÇÃO
+RESOLUCAO
    ↓
 AUDITORIA
 ```
 
-A finalidade é garantir que uma exceção não seja tratada apenas como uma mensagem de alerta, mas como um **fluxo completo de controle do sistema**.
+A finalidade e garantir que uma excecao nao seja tratada apenas como uma mensagem de alerta, mas como um **fluxo completo de controle do sistema**.
 
 ---
 
-# 3. Escopo
+## 3. Escopo
 
-O desenvolvimento está concentrado na **Parte 4 — Mensageria e Exceções**.
+O desenvolvimento esta concentrado na **Parte 4 — Mensageria e Excecoes**.
 
-São contemplados:
+ Sao contemplados:
 
-1. Comunicação normal entre terminal e funcionário;
-2. Comunicação local via Edge Gateway;
-3. Fallback de comunicação pela nuvem;
-4. Retorno da comunicação ao fluxo local;
-5. Tratamento de exceções;
-6. Comandos de resolução;
+1. Comunicacao normal entre terminal e funcionario;
+2. Comunicacao local via Edge Gateway;
+3. Fallback de comunicacao pela nuvem;
+4. Retorno da comunicacao ao fluxo local;
+5. Tratamento de excecoes;
+6. Comandos de resolucao;
 7. Controle de estados;
 8. Auditoria;
-9. Os cinco cenários de exceção definidos na arquitetura.
+9. Os cinco cenarios de excecao definidos na arquitetura.
 
-Os cinco cenários são:
+Os cinco cenarios sao:
 
-1. **Divergência de Peso / Sweethearting**
-2. **Restrição Etária**
-3. **Queda de WAN Durante Transação PIX**
-4. **Falha Crítica de Hardware**
+1. **Divergencia de Peso / Sweethearting**
+2. **Restricao Etaria**
+3. **Queda de WAN Durante Transacao PIX**
+4. **Falha Critica de Hardware**
 5. **Abandono de Terminal com Itens**
 
 ---
 
-# 4. Arquitetura Geral
+## 4. Arquitetura Geral
 
-## 4.1 Arquitetura Edge-first
+### 4.1 Arquitetura Edge-first
 
 Cada terminal de autoatendimento possui capacidade local de processamento.
 
-A arquitetura é composta, entre outros elementos, por:
+A arquitetura e composta, entre outros elementos, por:
 
 - Scanner;
-- Balança;
-- Câmera;
+- Balanca;
+- Camera;
 - Hardware Abstraction Layer — HAL;
 - PDV Core;
 - SQLite local com WAL;
@@ -116,30 +120,30 @@ A arquitetura é composta, entre outros elementos, por:
 - Edge MQTT Broker;
 - Edge Gateway;
 - Rede Wi-Fi corporativa;
-- Dispositivo do funcionário;
+- Dispositivo do funcionario;
 - AWS IoT Core;
 - Amazon EventBridge;
 - Amazon SQS FIFO;
 - Amazon Aurora PostgreSQL;
 - Amazon DynamoDB.
 
-A lógica principal do terminal não depende continuamente da internet.
+A logica principal do terminal nao depende continuamente da internet.
 
-Quando existe conectividade local, o terminal pode se comunicar diretamente com o dispositivo do funcionário.
+Quando existe conectividade local, o terminal pode se comunicar diretamente com o dispositivo do funcionario.
 
-Quando a comunicação local não está disponível, o sistema utiliza a infraestrutura de nuvem como mecanismo de fallback.
+Quando a comunicacao local nao esta disponivel, o sistema utiliza a infraestrutura de nuvem como mecanismo de fallback.
 
 ---
 
-# 5. Componentes Envolvidos na Mensageria
+## 5. Componentes Envolvidos na Mensageria
 
-## 5.1 Terminal de Autoatendimento
+### 5.1 Terminal de Autoatendimento
 
-É responsável por:
+E responsavel por:
 
 - detectar eventos;
 - processar sensores;
-- executar regras de negócio;
+- executar regras de negocio;
 - alterar seus estados;
 - gerar alertas;
 - publicar mensagens;
@@ -147,29 +151,29 @@ Quando a comunicação local não está disponível, o sistema utiliza a infraes
 - executar comandos;
 - registrar eventos de auditoria.
 
-## 5.2 Edge MQTT Broker
+### 5.2 Edge MQTT Broker
 
-Responsável pelo transporte das mensagens MQTT dentro da infraestrutura de borda.
+Responsavel pelo transporte das mensagens MQTT dentro da infraestrutura de borda.
 
 Recebe mensagens publicadas pelo terminal e permite o encaminhamento para:
 
 - Edge Gateway;
-- infraestrutura de sincronização;
+- infraestrutura de sincronizacao;
 - demais componentes autorizados.
 
-## 5.3 Local WebSocket Gateway
+### 5.3 Local WebSocket Gateway
 
-É o gateway responsável pela comunicação de baixa latência com os dispositivos dos funcionários.
+E o gateway responsavel pela comunicacao de baixa latencia com os dispositivos dos funcionarios.
 
-A comunicação local utiliza:
+A comunicacao local utiliza:
 
 ```text
 WebSocket + TLS + mTLS
 ```
 
-O objetivo é permitir que alertas cheguem ao funcionário mesmo quando a conexão com a internet estiver indisponível.
+O objetivo e permitir que alertas cheguem ao funcionario mesmo quando a conexao com a internet estiver indisponivel.
 
-## 5.4 Dispositivo do Funcionário
+### 5.4 Dispositivo do Funcionario
 
 Pode ser:
 
@@ -180,29 +184,29 @@ Pode ser:
 O dispositivo recebe:
 
 - alertas;
-- informações da exceção;
+- informacoes da excecao;
 - dados do terminal;
-- informações necessárias para tomada de decisão.
+- informacoes necessarias para tomada de decisao.
 
-Também pode enviar comandos de resolução.
+Também pode enviar comandos de resolucao.
 
-## 5.5 AWS IoT Core
+### 5.5 AWS IoT Core
 
-É utilizado como broker MQTT gerenciado na nuvem.
+E utilizado como broker MQTT gerenciado na nuvem.
 
-Também participa do mecanismo de fallback e da sincronização entre a infraestrutura local e a nuvem.
+Também participa do mecanismo de fallback e da sincronizacao entre a infraestrutura local e a nuvem.
 
-## 5.6 Cloud Bridge
+### 5.6 Cloud Bridge
 
-Representa a ponte de comunicação entre a infraestrutura de borda e a infraestrutura de nuvem.
+Representa a ponte de comunicacao entre a infraestrutura de borda e a infraestrutura de nuvem.
 
 No fallback, permite que os eventos do terminal cheguem à infraestrutura de nuvem.
 
-Na consolidação deste algoritmo, também é utilizado como caminho de retorno para comandos destinados ao terminal quando o funcionário estiver fora da rede local.
+Na consolidacao deste algoritmo, também e utilizado como caminho de retorno para comandos destinados ao terminal quando o funcionario estiver fora da rede local.
 
-## 5.7 FCM e APNs
+### 5.7 FCM e APNs
 
-São utilizados para notificações push quando o dispositivo do funcionário não está conectado diretamente à infraestrutura local.
+Sao utilizados para notificacoes push quando o dispositivo do funcionario nao esta conectado diretamente à infraestrutura local.
 
 ```text
 AWS IoT Core
@@ -211,22 +215,22 @@ Amazon SNS
       ↓
 FCM / APNs
       ↓
-Dispositivo do Funcionário
+Dispositivo do Funcionario
 ```
 
 ---
 
-# 6. Modelo de Estados
+## 6. Modelo de Estados
 
-Para evitar ambiguidades, são considerados separadamente:
+Para evitar ambiguidades, sao considerados separadamente:
 
 1. **Estado do terminal**
-2. **Estado da comunicação**
-3. **Estado da exceção**
+2. **Estado da comunicacao**
+3. **Estado da excecao**
 
-Esses estados não devem ser tratados como se fossem a mesma coisa.
+Esses estados nao devem ser tratados como se fossem a mesma coisa.
 
-## 6.1 Estados Principais do Terminal
+### 6.1 Estados Principais do Terminal
 
 ```text
 IDLE
@@ -239,7 +243,7 @@ PAYMENT_AMBIGUOUS_STATE
 OUT_OF_SERVICE
 ```
 
-## 6.2 Estados de Comunicação
+### 6.2 Estados de Comunicacao
 
 ```text
 LOCAL
@@ -248,25 +252,25 @@ FALLBACK_CLOUD
 RECOVERING
 ```
 
-Esses estados representam a disponibilidade do caminho de comunicação, e não o funcionamento do terminal.
+Esses estados representam a disponibilidade do caminho de comunicacao, e nao o funcionamento do terminal.
 
 Por exemplo:
 
 ```text
 Terminal = LOCKED_EXCEPTION
-Comunicação = LOCAL
+Comunicacao = LOCAL
 ```
 
 ou:
 
 ```text
 Terminal = WAITING_PIX_SETTLEMENT
-Comunicação = FALLBACK_CLOUD
+Comunicacao = FALLBACK_CLOUD
 ```
 
-## 6.3 Estados de Exceção
+### 6.3 Estados de Excecao
 
-Uma exceção pode estar:
+Uma excecao pode estar:
 
 ```text
 DETECTADA
@@ -278,13 +282,13 @@ RESOLVIDA
 REGISTRADA
 ```
 
-A existência de uma mensagem enviada não significa que a exceção já foi resolvida.
+A existencia de uma mensagem enviada nao significa que a excecao ja foi resolvida.
 
 ---
 
-# 7. Máquina de Estados do Terminal
+## 7. Máquina de Estados do Terminal
 
-O fluxo básico de operação é:
+O fluxo basico de operacao e:
 
 ```text
               ItemScanned
@@ -292,7 +296,7 @@ O fluxo básico de operação é:
                                       │
                        ┌──────────────┴──────────────┐
                        │                             │
-                  Validação OK               Divergência
+                  Validacao OK               Divergencia
                        │                             │
                        ▼                             ▼
                 [ITEM_ACCEPTED]             [LOCKED_EXCEPTION]
@@ -301,15 +305,15 @@ O fluxo básico de operação é:
                 [READY_FOR_NEXT] <──────────────────┘
 ```
 
-Uma exceção pode interromper o fluxo normal e colocar o terminal em estado de bloqueio.
+Uma excecao pode interromper o fluxo normal e colocar o terminal em estado de bloqueio.
 
 ---
 
-# 8. Comunicação Normal
+## 8. Comunicacao Normal
 
-## 8.1 Fluxo Terminal → Funcionário
+### 8.1 Fluxo Terminal → Funcionario
 
-O fluxo primário é:
+O fluxo primario e:
 
 ```text
 Terminal
@@ -325,20 +329,20 @@ WebSocket + TLS
 Tablet / Smartwatch
 ```
 
-Exemplo de tópico:
+Exemplo de topico:
 
 ```text
 store/{id}/terminal/{id}/alerts
 ```
 
-## 8.2 Fluxo Funcionário → Terminal
+### 8.2 Fluxo Funcionario → Terminal
 
-Após analisar o alerta, o funcionário executa uma ação no aplicativo.
+Apos analisar o alerta, o funcionario executa uma acao no aplicativo.
 
 No fluxo local:
 
 ```text
-Funcionário
+Funcionario
    ↓
 Aplicativo
    ↓
@@ -353,13 +357,13 @@ Edge MQTT Broker
 Terminal
 ```
 
-O comando é então processado pelo terminal.
+O comando e então processado pelo terminal.
 
 ---
 
-# 9. Fallback pela Nuvem
+## 9. Fallback pela Nuvem
 
-Quando o funcionário estiver fora do alcance da rede Wi-Fi local, o alerta pode seguir o caminho:
+Quando o funcionario estiver fora do alcance da rede Wi-Fi local, o alerta pode seguir o caminho:
 
 ```text
 Terminal
@@ -374,19 +378,19 @@ FCM / APNs
    ↓
 Rede 4G/5G
    ↓
-Dispositivo do Funcionário
+Dispositivo do Funcionario
 ```
 
-Esse fluxo permite que o funcionário receba a notificação mesmo sem conexão direta com a rede local da loja.
+Esse fluxo permite que o funcionario receba a notificacao mesmo sem conexao direta com a rede local da loja.
 
 ---
 
-# 10. Retorno do Comando pelo Fallback
+## 10. Retorno do Comando pelo Fallback
 
-Para completar o fluxo bidirecional quando o funcionário estiver fora da rede local, este desenvolvimento adota o seguinte caminho:
+Para completar o fluxo bidirecional quando o funcionario estiver fora da rede local, este desenvolvimento adota o seguinte caminho:
 
 ```text
-Funcionário
+Funcionario
    ↓
 AWS IoT Core
    ↓
@@ -399,21 +403,21 @@ Edge MQTT Broker
 Terminal
 ```
 
-Essa é uma **consolidação arquitetural** utilizada para fechar a comunicação de retorno no cenário em que o alerta chega ao funcionário pela nuvem.
+Essa e uma **consolidacao arquitetural** utilizada para fechar a comunicacao de retorno no cenario em que o alerta chega ao funcionario pela nuvem.
 
-A ideia central é:
+A ideia central e:
 
 ```text
 ALERTA:
-Terminal → Nuvem → Funcionário
+Terminal → Nuvem → Funcionario
 
 COMANDO:
-Funcionário → Nuvem → Edge → Terminal
+Funcionario → Nuvem → Edge → Terminal
 ```
 
 ---
 
-# 11. Regra de Separação entre Alerta e Comando
+## 11. Regra de Separacao entre Alerta e Comando
 
 O sistema deve distinguir:
 
@@ -429,7 +433,7 @@ THEFT_PREVENTION_TRIGGER
 
 ### Comando
 
-Representa uma ação solicitada pelo funcionário.
+Representa uma acao solicitada pelo funcionario.
 
 Exemplo:
 
@@ -452,19 +456,19 @@ COMANDO ENVIADO ≠ COMANDO EXECUTADO
 e:
 
 ```text
-COMANDO EXECUTADO ≠ EXCEÇÃO RESOLVIDA
+COMANDO EXECUTADO ≠ EXCECAO RESOLVIDA
 ```
 
 ---
 
-# 12. Algoritmo-Mãe — Visão Geral
+## 12. Algoritmo-Mãe — Visão Geral
 
-O algoritmo-mãe representa o comportamento geral do sistema.
+O algoritmo-mae representa o comportamento geral do sistema.
 
 ```text
 ALGORITMO SistemaMensageriaExcecoes
 
-INÍCIO
+INICIO
 
     InicializarTerminal()
     InicializarSensores()
@@ -476,34 +480,34 @@ INÍCIO
     estadoTerminal ← IDLE
     estadoComunicacao ← LOCAL
 
-    ENQUANTO sistema_ativo = VERDADEIRO FAÇA
+    ENQUANTO sistema_ativo = VERDADEIRO FACA
 
         MonitorarConectividade()
 
-        SE comunicacao_local_disponivel() ENTÃO
+        SE comunicacao_local_disponivel() ENTAO
             estadoComunicacao ← LOCAL
 
-        SENÃO SE comunicacao_cloud_disponivel() ENTÃO
+        SENAO SE comunicacao_cloud_disponivel() ENTAO
             estadoComunicacao ← FALLBACK_CLOUD
 
-        SENÃO
+        SENAO
             estadoComunicacao ← OFFLINE
         FIM_SE
 
         evento ← AguardarEvento()
 
-        SE evento = NENHUM_EVENTO ENTÃO
+        SE evento = NENHUM_EVENTO ENTAO
             ContinuarMonitoramento()
             CONTINUE
         FIM_SE
 
         excecao ← DetectarExcecao(evento)
 
-        SE excecao = NENHUMA ENTÃO
+        SE excecao = NENHUMA ENTAO
 
             ProcessarOperacaoNormal(evento)
 
-        SENÃO
+        SENAO
 
             estadoTerminal ← DeterminarEstadoDeExcecao(excecao)
 
@@ -515,7 +519,7 @@ INÍCIO
 
             resposta ← AguardarAcaoDoFuncionario()
 
-            SE resposta = COMANDO_VALIDO ENTÃO
+            SE resposta = COMANDO_VALIDO ENTAO
 
                 ValidarPermissao(resposta)
 
@@ -523,11 +527,11 @@ INÍCIO
 
                 resultado ← AguardarConfirmacaoDeExecucao()
 
-                SE resultado = EXECUTADO ENTÃO
+                SE resultado = EXECUTADO ENTAO
 
                     ValidarResolucao()
 
-                    SE excecao_resolvida() ENTÃO
+                    SE excecao_resolvida() ENTAO
 
                         RegistrarResolucao()
 
@@ -535,7 +539,7 @@ INÍCIO
 
                     FIM_SE
 
-                SENÃO
+                SENAO
 
                     RegistrarFalhaDoComando()
 
@@ -547,11 +551,11 @@ INÍCIO
 
         FIM_SE
 
-        SE estadoComunicacao = OFFLINE ENTÃO
+        SE estadoComunicacao = OFFLINE ENTAO
             ArmazenarEventoParaSincronizacao()
         FIM_SE
 
-        SE conectividade_foi_restabelecida() ENTÃO
+        SE conectividade_foi_restabelecida() ENTAO
 
             estadoComunicacao ← RECOVERING
 
@@ -559,7 +563,7 @@ INÍCIO
 
             ExecutarDeduplicacao()
 
-            ExecutarReconciliação()
+            ExecutarReconciliacao()
 
             ConfirmarSincronizacao()
 
@@ -574,7 +578,7 @@ FIM
 
 ---
 
-# 13. Inicialização do Sistema
+## 13. Inicialização do Sistema
 
 ```text
 PROCEDIMENTO InicializarTerminal()
@@ -592,7 +596,7 @@ PROCEDIMENTO InicializarTerminal()
 
     ValidarComponentes()
 
-    SE componentes_validos = FALSO ENTÃO
+    SE componentes_validos = FALSO ENTAO
         RegistrarFalhaDeInicializacao()
     FIM_SE
 
@@ -601,12 +605,12 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 14. Operação Normal
+## 14. Operação Normal
 
 ```text
 PROCEDIMENTO ProcessarOperacaoNormal(evento)
 
-    SE evento.tipo = ItemScanned ENTÃO
+    SE evento.tipo = ItemScanned ENTAO
 
         estadoTerminal ← EVALUATING
 
@@ -614,7 +618,7 @@ PROCEDIMENTO ProcessarOperacaoNormal(evento)
 
         produto ← ConsultarCatalogoLocal(sku)
 
-        SE produto possui AGE_VERIFICATION_REQUIRED ENTÃO
+        SE produto possui AGE_VERIFICATION_REQUIRED ENTAO
 
             TratarRestricaoEtaria(produto)
 
@@ -634,7 +638,7 @@ PROCEDIMENTO ProcessarOperacaoNormal(evento)
             imagem
         )
 
-        SE resultado = VALIDO ENTÃO
+        SE resultado = VALIDO ENTAO
 
             AdicionarItemAoCarrinho()
 
@@ -642,7 +646,7 @@ PROCEDIMENTO ProcessarOperacaoNormal(evento)
 
             estadoTerminal ← READY_FOR_NEXT
 
-        SENÃO
+        SENAO
 
             TratarDivergenciaPesoOuSweethearting(
                 resultado
@@ -657,15 +661,15 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 15. Detecção Multissensorial
+## 15. Deteccao Multissensorial
 
 A arquitetura utiliza:
 
-- código de barras;
+- codigo de barras;
 - peso;
-- visão computacional.
+- visao computacional.
 
-O processo geral é:
+O processo geral e:
 
 ```text
 Scanner
@@ -678,14 +682,14 @@ Peso esperado
    ↓
 Peso medido
    ↓
-Visão computacional
+Visao computacional
    ↓
 Fusion Arbiter
    ↓
-Validação
+Validacao
 ```
 
-Para divergência de peso:
+Para divergencia de peso:
 
 ```text
 Z = |ΔM - M_esperada| / σM
@@ -697,17 +701,17 @@ Quando:
 Z > 2.5
 ```
 
-é gerada a condição:
+e gerada a condicao:
 
 ```text
 WEIGHT_ANOMALY
 ```
 
-Também pode ocorrer bloqueio quando um objeto é transferido para a área de ensacamento sem um `ItemScanned` correspondente.
+Também pode ocorrer bloqueio quando um objeto e transferido para a área de ensacamento sem um `ItemScanned` correspondente.
 
 ---
 
-# 16. Núcleo de Tratamento de Exceções
+## 16. Núcleo de Tratamento de Exceções
 
 ```text
 PROCEDIMENTO TratarExcecao(excecao)
@@ -724,7 +728,7 @@ PROCEDIMENTO TratarExcecao(excecao)
 
     comando ← AguardarComandoDoFuncionario()
 
-    SE comando = NENHUM ENTÃO
+    SE comando = NENHUM ENTAO
         ManterEstadoDeExcecao()
         RETORNAR
     FIM_SE
@@ -735,13 +739,13 @@ PROCEDIMENTO TratarExcecao(excecao)
 
     RegistrarResultado(resultado)
 
-    SE resultado = SUCESSO ENTÃO
+    SE resultado = SUCESSO ENTAO
 
-        SE excecao_resolvida() ENTÃO
+        SE excecao_resolvida() ENTAO
             FinalizarExcecao()
         FIM_SE
 
-    SENÃO
+    SENAO
 
         ManterEstadoDeExcecao()
 
@@ -752,12 +756,12 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 17. Entrega de Alertas
+## 17. Entrega de Alertas
 
 ```text
 PROCEDIMENTO EntregarAlerta(mensagem)
 
-    SE estadoComunicacao = LOCAL ENTÃO
+    SE estadoComunicacao = LOCAL ENTAO
 
         EnviarParaEdgeGateway(mensagem)
 
@@ -765,7 +769,7 @@ PROCEDIMENTO EntregarAlerta(mensagem)
 
         ConfirmarRecebimento()
 
-    SENÃO SE estadoComunicacao = FALLBACK_CLOUD ENTÃO
+    SENÃO SE estadoComunicacao = FALLBACK_CLOUD ENTAO
 
         PublicarAWSIoT(mensagem)
 
@@ -788,7 +792,7 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 18. Recepção e Execução de Comandos
+## 18. Recepção e Execução de Comandos
 
 ```text
 PROCEDIMENTO ProcessarComando(comando)
@@ -801,19 +805,19 @@ PROCEDIMENTO ProcessarComando(comando)
 
     VerificarEstadoAtual()
 
-    SE comando = RELEASE_TERMINAL ENTÃO
+    SE comando = RELEASE_TERMINAL ENTAO
 
         ExecutarReleaseTerminal()
 
-    SENÃO SE comando = APPROVE_AGE ENTÃO
+    SENÃO SE comando = APPROVE_AGE ENTAO
 
         ExecutarApproveAge()
 
-    SENÃO SE comando = MANUAL_OVERRIDE_PAYMENT ENTÃO
+    SENÃO SE comando = MANUAL_OVERRIDE_PAYMENT ENTAO
 
         ExecutarManualOverridePayment()
 
-    SENÃO SE comando = CLEAR_AND_RESET_SESSION ENTÃO
+    SENÃO SE comando = CLEAR_AND_RESET_SESSION ENTAO
 
         ExecutarClearAndResetSession()
 
@@ -828,9 +832,9 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 19. Idempotência dos Comandos
+## 19. Idempotência dos Comandos
 
-Para evitar execução duplicada de comandos durante reconexões, o desenvolvimento adota um identificador único para cada comando.
+Para evitar execucao duplicada de comandos durante reconexoes, o desenvolvimento adota um identificador unico para cada comando.
 
 ```text
 CommandID
@@ -839,13 +843,13 @@ CommandID
 Antes de executar:
 
 ```text
-SE CommandID já executado ENTÃO
+SE CommandID ja executado ENTAO
 
-    Não executar novamente
+    Nao executar novamente
 
-    Retornar confirmação da execução anterior
+    Retornar confirmacao da execucao anterior
 
-SENÃO
+SENAO
 
     Registrar CommandID
 
@@ -854,15 +858,15 @@ SENÃO
 FIM_SE
 ```
 
-Essa regra é uma **consolidação de implementação** para evitar duplicidade durante retransmissões e reconexões.
+Essa regra e uma **consolidacao de implementacao** para evitar duplicidade durante retransmissoes e reconexoes.
 
 ---
 
-# 20. Cenário 1 — Divergência de Peso / Sweethearting
+## 20. Cenário 1 — Divergência de Peso / Sweethearting
 
-## 20.1 Gatilhos
+### 20.1 Gatilhos
 
-A exceção ocorre quando:
+A excecao ocorre quando:
 
 ```text
 Z > 2.5
@@ -871,13 +875,13 @@ Z > 2.5
 ou:
 
 ```text
-Objeto transferido para a área de ensacamento
+Objeto transferido para a area de ensacamento
 sem ItemScanned correspondente
 ```
 
-Também são considerados os critérios de bloqueio definidos pela arquitetura, como múltiplos objetos detectados em uma passagem ou retirada prematura de itens.
+Também sao considerados os criterios de bloqueio definidos pela arquitetura, como multiplos objetos detectados em uma passagem ou retirada prematura de itens.
 
-## 20.2 Estado
+### 20.2 Estado
 
 O terminal transiciona para:
 
@@ -887,14 +891,14 @@ LOCKED_EXCEPTION
 
 Nesse estado:
 
-- display é congelado;
-- leitores são desativados;
-- usuário recebe mensagem amigável;
-- evento de alarme é enviado.
+- display e congelado;
+- leitores sao desativados;
+- usuario recebe mensagem amigavel;
+- evento de alarme e enviado.
 
-## 20.3 Mensagem
+### 20.3 Mensagem
 
-Tópico:
+Topico:
 
 ```text
 store/{id}/term/{id}/alert
@@ -911,15 +915,15 @@ Dados:
 ```text
 SKU inferido
 Delta de peso
-URL do clipe de vídeo
+URL do clipe de video
 TerminalID
 Timestamp
 ```
 
-## 20.4 Fluxo
+### 20.4 Fluxo
 
 ```text
-Divergência
+Divergencia
     ↓
 LOCKED_EXCEPTION
     ↓
@@ -927,24 +931,24 @@ Gerar THEFT_PREVENTION_TRIGGER
     ↓
 Enviar alerta
     ↓
-Funcionário recebe vibração
+Funcionario recebe vibracao
     ↓
-Funcionário verifica comparação visual
+Funcionario verifica comparacao visual
     ↓
-Funcionário corrige item
+Funcionario corrige item
     ↓
-Funcionário envia RELEASE_TERMINAL
+Funcionario envia RELEASE_TERMINAL
     ↓
 Terminal valida comando
     ↓
-Terminal executa liberação
+Terminal executa liberacao
     ↓
 Terminal retorna ao fluxo normal
     ↓
 Registrar auditoria
 ```
 
-## 20.5 Pseudocódigo
+### 20.5 Pseudocódigo
 
 ```text
 PROCEDIMENTO TratarDivergenciaPesoOuSweethearting(resultado)
@@ -970,7 +974,7 @@ PROCEDIMENTO TratarDivergenciaPesoOuSweethearting(resultado)
 
     funcionario ← AguardarAtendimento()
 
-    SE funcionario realizou_correcao = VERDADEIRO ENTÃO
+    SE funcionario realizou_correcao = VERDADEIRO ENTAO
 
         comando ← RELEASE_TERMINAL
 
@@ -978,7 +982,7 @@ PROCEDIMENTO TratarDivergenciaPesoOuSweethearting(resultado)
 
         resultadoComando ← ExecutarComando(comando)
 
-        SE resultadoComando = SUCESSO ENTÃO
+        SE resultadoComando = SUCESSO ENTAO
 
             estadoTerminal ← READY_FOR_NEXT
 
@@ -993,9 +997,9 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 21. Cenário 2 — Restrição Etária
+## 21. Cenário 2 — Restrição Etária
 
-## 21.1 Gatilho
+### 21.1 Gatilho
 
 O sistema identifica um SKU com:
 
@@ -1003,20 +1007,20 @@ O sistema identifica um SKU com:
 AGE_VERIFICATION_REQUIRED
 ```
 
-## 21.2 Comportamento do Terminal
+### 21.2 Comportamento do Terminal
 
-O fluxo de escaneamento é interrompido.
+O fluxo de escaneamento e interrompido.
 
 O terminal apresenta:
 
 ```text
-"Item com restrição de idade.
-Um atendente está a caminho."
+"Item com restricao de idade.
+Um atendente esta a caminho."
 ```
 
-## 21.3 Mensagem
+### 21.3 Mensagem
 
-Tópico:
+Topico:
 
 ```text
 store/{id}/term/{id}/alert
@@ -1032,36 +1036,36 @@ Campos:
 
 ```text
 SKU
-Descrição
+Descricao
 TerminalID
 Timestamp
 ```
 
-## 21.4 Fluxo
+### 21.4 Fluxo
 
 ```text
 SKU escaneado
     ↓
 AGE_VERIFICATION_REQUIRED
     ↓
-Interromper inclusão
+Interromper inclusao
     ↓
 Gerar AGE_GATE_REQUIRED
     ↓
-Notificar funcionário
+Notificar funcionario
     ↓
-Funcionário verifica documento
+Funcionario verifica documento
     ↓
-Funcionário envia APPROVE_AGE
+Funcionario envia APPROVE_AGE
     ↓
 Terminal valida comando
     ↓
 Terminal libera fluxo
     ↓
-Item é incluído
+Item e incluido
 ```
 
-## 21.5 Pseudocódigo
+### 21.5 Pseudocódigo
 
 ```text
 PROCEDIMENTO TratarRestricaoEtaria(produto)
@@ -1076,7 +1080,7 @@ PROCEDIMENTO TratarRestricaoEtaria(produto)
     InterromperInclusaoDoItem()
 
     ExibirMensagem(
-        "Item com restrição de idade. Um atendente está a caminho."
+        "Item com restricao de idade. Um atendente esta a caminho."
     )
 
     RegistrarEventoLocal(mensagem)
@@ -1085,13 +1089,13 @@ PROCEDIMENTO TratarRestricaoEtaria(produto)
 
     comando ← AguardarComandoDoFuncionario()
 
-    SE comando = APPROVE_AGE ENTÃO
+    SE comando = APPROVE_AGE ENTAO
 
         ValidarAutorizacaoDoFuncionario()
 
         resultado ← ExecutarApproveAge()
 
-        SE resultado = SUCESSO ENTÃO
+        SE resultado = SUCESSO ENTAO
 
             DesbloquearTerminal()
 
@@ -1108,45 +1112,45 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 22. Cenário 3 — Queda de WAN Durante Transação PIX
+## 22. Cenário 3 — Queda de WAN Durante Transação PIX
 
-## 22.1 Gatilho
+### 22.1 Gatilho
 
-A exceção ocorre quando:
+A excecao ocorre quando:
 
 ```text
 timeout > 15 segundos
 ```
 
-ou quando o socket é encerrado enquanto o terminal está em:
+ou quando o socket e encerrado enquanto o terminal esta em:
 
 ```text
 WAITING_PIX_SETTLEMENT
 ```
 
-## 22.2 Regra Fundamental
+### 22.2 Regra Fundamental
 
-O sistema **não deve interpretar automaticamente a perda da comunicação como pagamento negado ou aprovado**.
+O sistema **nao deve interpretar automaticamente a perda da comunicacao como pagamento negado ou aprovado**.
 
-A condição deve ser tratada como:
+A condicao deve ser tratada como:
 
 ```text
 PAYMENT_AMBIGUOUS_STATE
 ```
 
-## 22.3 Comportamento
+### 22.3 Comportamento
 
 O terminal:
 
-- mantém o QR Code;
-- mantém a contagem regressiva;
+- mantem o QR Code;
+- mantem a contagem regressiva;
 - executa sondagem;
-- tenta o link secundário LTE;
-- aguarda confirmação do status.
+- tenta o link secundario LTE;
+- aguarda confirmacao do status.
 
-## 22.4 Mensagem
+### 22.4 Mensagem
 
-Tópico:
+Topico:
 
 ```text
 store/{id}/term/{id}/pix_probe
@@ -1167,7 +1171,7 @@ status
 timestamp
 ```
 
-## 22.5 Fluxo
+### 22.5 Fluxo
 
 ```text
 WAITING_PIX_SETTLEMENT
@@ -1186,15 +1190,15 @@ Tentar LTE
         ↓
 Pagamento confirmado?
      /          \
-   SIM           NÃO
+   SIM           NAO
    ↓              ↓
-Finalizar       Funcionário
-transação       verifica adquirente
+Finalizar       Funcionario
+transacao       verifica adquirente
                   ↓
           MANUAL_OVERRIDE_PAYMENT
 ```
 
-## 22.6 Pseudocódigo
+### 22.6 Pseudocódigo
 
 ```text
 PROCEDIMENTO TratarQuedaWANPIX()
@@ -1216,7 +1220,7 @@ PROCEDIMENTO TratarQuedaWANPIX()
 
     resultado ← ConsultarStatusPIX()
 
-    SE resultado = CONFIRMADO ENTÃO
+    SE resultado = CONFIRMADO ENTAO
 
         FinalizarPagamento()
 
@@ -1230,21 +1234,21 @@ PROCEDIMENTO TratarQuedaWANPIX()
 
     resultado ← ConsultarStatusPIX()
 
-    SE resultado = CONFIRMADO ENTÃO
+    SE resultado = CONFIRMADO ENTAO
 
         FinalizarPagamento()
 
         RegistrarResolucao()
 
-    SENÃO
+    SENAO
 
         EnviarAlertaFuncionario(
-            "Terminal: Timeout PIX. Verificando liquidação..."
+            "Terminal: Timeout PIX. Verificando liquidacao..."
         )
 
         funcionario ← AguardarVerificacao()
 
-        SE funcionario confirmou_pagamento = VERDADEIRO ENTÃO
+        SE funcionario confirmou_pagamento = VERDADEIRO ENTAO
 
             comando ← MANUAL_OVERRIDE_PAYMENT
 
@@ -1252,7 +1256,7 @@ PROCEDIMENTO TratarQuedaWANPIX()
 
             RegistrarOverrideManual()
 
-        SENÃO
+        SENAO
 
             ManterEstadoAmbiguo()
 
@@ -1265,14 +1269,14 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 23. Cenário 4 — Falha Crítica de Hardware
+## 23. Cenário 4 — Falha Crítica de Hardware
 
-## 23.1 Gatilhos
+### 23.1 Gatilhos
 
 Pode ocorrer por:
 
-- perda de keep-alive da balança;
-- erro no driver de captura de vídeo V4L2.
+- perda de keep-alive da balanca;
+- erro no driver de captura de video V4L2.
 
 Exemplos:
 
@@ -1281,19 +1285,19 @@ SCALE_USB0
 ERR_TIMEOUT
 ```
 
-## 23.2 Comportamento
+### 23.2 Comportamento
 
 O terminal:
 
-1. encerra a sessão de forma emergencial;
+1. encerra a sessao de forma emergencial;
 2. informa o cliente;
-3. orienta transferência dos itens;
-4. gera alerta crítico;
+3. orienta transferencia dos itens;
+4. gera alerta critico;
 5. passa para `OUT_OF_SERVICE`.
 
-## 23.3 Mensagem
+### 23.3 Mensagem
 
-Tópico:
+Topico:
 
 ```text
 store/{id}/term/{id}/system
@@ -1314,7 +1318,7 @@ TerminalID
 timestamp
 ```
 
-## 23.4 Fluxo
+### 23.4 Fluxo
 
 ```text
 Falha de hardware
@@ -1325,18 +1329,18 @@ Encerramento emergencial
        ↓
 Notificar cliente
        ↓
-Notificar manutenção
+Notificar manutencao
        ↓
 OUT_OF_SERVICE
        ↓
-Salvar transação pendente
+Salvar transacao pendente
        ↓
-Gerar recuperação por token/QR
+Gerar recuperacao por token/QR
        ↓
-Transferência para terminal adjacente
+Transferencia para terminal adjacente
 ```
 
-## 23.5 Pseudocódigo
+### 23.5 Pseudocódigo
 
 ```text
 PROCEDIMENTO TratarFalhaHardware(falha)
@@ -1372,23 +1376,23 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 24. Cenário 5 — Abandono de Terminal com Itens
+## 24. Cenário 5 — Abandono de Terminal com Itens
 
-## 24.1 Gatilho
+### 24.1 Gatilho
 
-A exceção ocorre quando:
+A excecao ocorre quando:
 
 ```text
-ausência de interação ≥ 60 segundos
+ausencia de interacao ≥ 60 segundos
 ```
 
 e os sensores indicam:
 
 ```text
-ausência do cliente
+ausencia do cliente
 ```
 
-## 24.2 Primeiro estágio
+### 24.2 Primeiro estágio
 
 O sistema emite aviso sonoro direcional por:
 
@@ -1396,17 +1400,17 @@ O sistema emite aviso sonoro direcional por:
 15 segundos
 ```
 
-## 24.3 Segundo estágio
+### 24.3 Segundo estágio
 
-Se o cliente não retornar:
+Se o cliente nao retornar:
 
 ```text
 bloquear terminal
 ```
 
-## 24.4 Mensagem
+### 24.4 Mensagem
 
-Tópico:
+Topico:
 
 ```text
 store/{id}/term/{id}/alert
@@ -1427,12 +1431,12 @@ TerminalID
 timestamp
 ```
 
-## 24.5 Fluxo
+### 24.5 Fluxo
 
 ```text
-60s sem interação
+60s sem interacao
        ↓
-Verificar presença
+Verificar presenca
        ↓
 Cliente ausente
        ↓
@@ -1440,35 +1444,35 @@ Aviso sonoro por 15s
        ↓
 Cliente retorna?
      /       \
-   SIM        NÃO
+   SIM        NAO
    ↓           ↓
 Continuar    Bloquear
               ↓
         SESSION_ABANDONED
               ↓
-        Notificar funcionário
+        Notificar funcionario
               ↓
       CLEAR_AND_RESET_SESSION
               ↓
         Imprimir etiqueta
               ↓
-         Limpar sessão
+         Limpar sessao
               ↓
              IDLE
 ```
 
-## 24.6 Pseudocódigo
+### 24.6 Pseudocódigo
 
 ```text
 PROCEDIMENTO TratarAbandonoTerminal()
 
     IniciarTemporizador(60 segundos)
 
-    SE sem_interacao_por_60s() E cliente_ausente() ENTÃO
+    SE sem_interacao_por_60s() E cliente_ausente() ENTAO
 
         EmitirAvisoSonoro(15 segundos)
 
-        SE cliente_ausente_apos_aviso() ENTÃO
+        SE cliente_ausente_apos_aviso() ENTAO
 
             BloquearTerminal()
 
@@ -1484,7 +1488,7 @@ PROCEDIMENTO TratarAbandonoTerminal()
 
             comando ← AguardarComandoDoFuncionario()
 
-            SE comando = CLEAR_AND_RESET_SESSION ENTÃO
+            SE comando = CLEAR_AND_RESET_SESSION ENTAO
 
                 ImprimirEtiquetaDeItensCancelados()
 
@@ -1509,19 +1513,19 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 25. Monitoramento da Comunicação
+## 25. Monitoramento da Comunicação
 
 O sistema deve monitorar continuamente:
 
 - disponibilidade da rede local;
-- conexão MQTT;
-- sessões WebSocket;
+- conexao MQTT;
+- sessoes WebSocket;
 - disponibilidade da WAN;
 - link LTE/5G;
 - heartbeats;
 - status de mensagens pendentes.
 
-## 25.1 Pseudocódigo
+### 25.1 Pseudocódigo
 
 ```text
 PROCEDIMENTO MonitorarConectividade()
@@ -1534,11 +1538,11 @@ PROCEDIMENTO MonitorarConectividade()
 
     websocket ← VerificarWebSocket()
 
-    SE local = DISPONIVEL E mqtt = DISPONIVEL ENTÃO
+    SE local = DISPONIVEL E mqtt = DISPONIVEL ENTAO
 
         estadoComunicacao ← LOCAL
 
-    SENÃO SE wan = DISPONIVEL ENTÃO
+    SENÃO SE wan = DISPONIVEL ENTAO
 
         estadoComunicacao ← FALLBACK_CLOUD
 
@@ -1553,13 +1557,13 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 26. Operação Offline
+## 26. Operação Offline
 
-A perda da WAN não significa necessariamente que o terminal deixou de funcionar.
+A perda da WAN nao significa necessariamente que o terminal deixou de funcionar.
 
-A arquitetura foi projetada para permitir operação local e armazenamento das informações que precisam ser sincronizadas posteriormente.
+A arquitetura foi projetada para permitir operacao local e armazenamento das informacoes que precisam ser sincronizadas posteriormente.
 
-Quando uma operação puder ser concluída localmente:
+Quando uma operacao puder ser concluida localmente:
 
 ```text
 Terminal
@@ -1574,7 +1578,7 @@ PENDING_SYNC
 Posteriormente:
 
 ```text
-Conexão restaurada
+Conexao restaurada
       ↓
 Sync Coordinator
       ↓
@@ -1582,7 +1586,7 @@ Greengrass Stream Manager
       ↓
 SQS FIFO
       ↓
-Deduplicação
+Deduplicacao
       ↓
 Aurora / DynamoDB
       ↓
@@ -1593,9 +1597,9 @@ SYNCED
 
 ---
 
-# 27. Recuperação da WAN
+## 27. Recuperação da WAN
 
-A recuperação da conexão deve ser tratada como uma transição própria.
+A recuperacao da conexao deve ser tratada como uma transicao propria.
 
 ```text
 OFFLINE
@@ -1604,18 +1608,18 @@ Conectividade detectada
    ↓
 RECOVERING
    ↓
-Sincronização
+Sincronizacao
    ↓
-Deduplicação
+Deduplicacao
    ↓
-Reconciliação
+Reconciliacao
    ↓
-Confirmação
+Confirmacao
    ↓
 LOCAL
 ```
 
-## 27.1 Pseudocódigo
+### 27.1 Pseudocódigo
 
 ```text
 PROCEDIMENTO RecuperarConectividade()
@@ -1624,7 +1628,7 @@ PROCEDIMENTO RecuperarConectividade()
 
     transacoes ← LerOutbox()
 
-    PARA cada transacao EM transacoes FAÇA
+    PARA cada transacao EM transacoes FACA
 
         EnviarParaStreamManager(transacao)
 
@@ -1634,9 +1638,9 @@ PROCEDIMENTO RecuperarConectividade()
 
     ExecutarDeduplicacao()
 
-    ExecutarReconciliação()
+    ExecutarReconciliacao()
 
-    SE sincronizacao_confirmada() ENTÃO
+    SE sincronizacao_confirmada() ENTAO
 
         AtualizarOutboxParaSYNCED()
 
@@ -1644,7 +1648,7 @@ PROCEDIMENTO RecuperarConectividade()
 
         estadoComunicacao ← LOCAL
 
-    SENÃO
+    SENAO
 
         ManterPendencias()
 
@@ -1657,15 +1661,15 @@ FIM_PROCEDIMENTO
 
 ---
 
-# 28. Controle de Mensagens Pendentes
+## 28. Controle de Mensagens Pendentes
 
-Quando uma mensagem não puder ser entregue imediatamente:
+Quando uma mensagem nao puder ser entregue imediatamente:
 
 ```text
 mensagem.status ← PENDING
 ```
 
-A mensagem permanece armazenada até que exista um caminho válido para sua entrega.
+A mensagem permanece armazenada até que exista um caminho valido para sua entrega.
 
 Quando entregue:
 
@@ -1687,35 +1691,35 @@ RETRY
 
 ---
 
-# 29. Reenvio e Deduplicação
+## 29. Reenvio e Deduplicação
 
-Mensagens e comandos podem ser retransmitidos durante uma falha de comunicação.
+Mensagens e comandos podem ser retransmitidos durante uma falha de comunicacao.
 
-Por isso, o sistema deve verificar identificadores antes de processar novamente uma operação.
+Por isso, o sistema deve verificar identificadores antes de processar novamente uma operacao.
 
 ```text
 Receber mensagem
       ↓
 Verificar identificador
       ↓
-Já processada?
+Ja processada?
    /        \
- SIM         NÃO
+ SIM         NAO
  ↓            ↓
 Ignorar      Processar
              ↓
         Registrar ID
 ```
 
-No fluxo transacional da arquitetura, o `UUIDv7` é utilizado para identificar operações e permitir deduplicação.
+No fluxo transacional da arquitetura, o `UUIDv7` e utilizado para identificar operacoes e permitir deduplicação.
 
-Para comandos de resolução, este desenvolvimento utiliza `CommandID` como mecanismo de idempotência.
+Para comandos de resolucao, este desenvolvimento utiliza `CommandID` como mecanismo de idempotencia.
 
 ---
 
-# 30. Auditoria
+## 30. Auditoria
 
-Todas as exceções relevantes devem gerar registros de auditoria.
+Todas as excecoes relevantes devem gerar registros de auditoria.
 
 Um registro deve permitir reconstruir:
 
@@ -1723,33 +1727,33 @@ Um registro deve permitir reconstruir:
 O que aconteceu?
 Quando aconteceu?
 Em qual terminal?
-Qual foi a exceção?
+Qual foi a excecao?
 Qual mensagem foi enviada?
-Qual funcionário recebeu?
+Qual funcionario recebeu?
 Qual comando foi enviado?
 Qual comando foi executado?
 Qual foi o resultado?
-Quando a exceção foi encerrada?
+Quando a excecao foi encerrada?
 ```
 
-## 30.1 Fluxo de Auditoria
+### 30.1 Fluxo de Auditoria
 
 ```text
 Evento
  ↓
-Detecção
+Deteccao
  ↓
 Alerta
  ↓
-Ação do funcionário
+Acao do funcionario
  ↓
 Comando
  ↓
-Execução
+Execucao
  ↓
 Resultado
  ↓
-Resolução
+Resolucao
  ↓
 Registro de auditoria
 ```
@@ -1758,23 +1762,23 @@ A arquitetura utiliza, entre outros mecanismos, o **Amazon Aurora PostgreSQL** p
 
 ---
 
-# 31. Controle de Autorização do Funcionário
+## 31. Controle de Autorização do Funcionário
 
-Comandos sensíveis devem ser executados somente após validação da identidade e autorização do funcionário.
+Comandos sensíveis devem ser executados somente apos validacao da identidade e autorizacao do funcionario.
 
-No cenário de divergência de peso, por exemplo, a arquitetura especifica:
+No cenario de divergencia de peso, por exemplo, a arquitetura especifica:
 
 ```text
 Biometria/PIN
 ```
 
-como mecanismo de autorização para:
+como mecanismo de autorizacao para:
 
 ```text
 RELEASE_TERMINAL
 ```
 
-No cenário de restrição etária, o funcionário deve realizar a verificação do documento e então executar:
+No cenario de restricao etaria, o funcionario deve realizar a verificacao do documento e então executar:
 
 ```text
 APPROVE_AGE
@@ -1782,69 +1786,69 @@ APPROVE_AGE
 
 ---
 
-# 32. Regra de Segurança para Exceções
+## 32. Regra de Segurança para Exceções
 
-Uma exceção não deve ser encerrada simplesmente porque o funcionário recebeu a notificação.
+Uma excecao nao deve ser encerrada simplesmente porque o funcionario recebeu a notificacao.
 
 O encerramento ocorre somente quando:
 
 ```text
-Detecção
+Deteccao
    ↓
-Ação humana
+Acao humana
    ↓
 Comando
    ↓
-Execução confirmada
+Execucao confirmada
    ↓
-Condição resolvida
+Condicao resolvida
 ```
 
 Somente então:
 
 ```text
-Exceção = RESOLVIDA
+Excecao = RESOLVIDA
 ```
 
 ---
 
-# 33. Matriz Consolidada dos Cinco Cenários
+## 33. Matriz Consolidada dos Cinco Cenários
 
-| # | Exceção | Gatilho | Estado/ação do terminal | Mensagem | Ação do funcionário | Resolução |
+| # | Excecao | Gatilho | Estado/acao do terminal | Mensagem | Acao do funcionario | Resolucao |
 |---|---|---|---|---|---|---|
-| 1 | Divergência de Peso / Sweethearting | `Z > 2.5` ou item sem scan | `LOCKED_EXCEPTION` | `THEFT_PREVENTION_TRIGGER` | Conferir/corrigir item | `RELEASE_TERMINAL` |
-| 2 | Restrição Etária | `AGE_VERIFICATION_REQUIRED` | Interrompe inclusão | `AGE_GATE_REQUIRED` | Verificar documento | `APPROVE_AGE` |
-| 3 | Queda WAN durante PIX | Timeout > 15s / socket fechado | `PAYMENT_AMBIGUOUS_STATE` | `PAYMENT_AMBIGUOUS_STATE` | Verificar liquidação | `MANUAL_OVERRIDE_PAYMENT` |
-| 4 | Falha de Hardware | Keep-alive/driver perdido | `OUT_OF_SERVICE` | `HARDWARE_FAULT` | Acionar manutenção/transferência | Recuperação em terminal adjacente |
-| 5 | Abandono com Itens | 60s + cliente ausente | Bloqueio após aviso | `SESSION_ABANDONED` | Limpar sessão | `CLEAR_AND_RESET_SESSION` |
+| 1 | Divergencia de Peso / Sweethearting | `Z > 2.5` ou item sem scan | `LOCKED_EXCEPTION` | `THEFT_PREVENTION_TRIGGER` | Conferir/corrigir item | `RELEASE_TERMINAL` |
+| 2 | Restricao Etaria | `AGE_VERIFICATION_REQUIRED` | Interrompe inclusao | `AGE_GATE_REQUIRED` | Verificar documento | `APPROVE_AGE` |
+| 3 | Queda WAN durante PIX | Timeout > 15s / socket fechado | `PAYMENT_AMBIGUOUS_STATE` | `PAYMENT_AMBIGUOUS_STATE` | Verificar liquidacao | `MANUAL_OVERRIDE_PAYMENT` |
+| 4 | Falha de Hardware | Keep-alive/driver perdido | `OUT_OF_SERVICE` | `HARDWARE_FAULT` | Acionar manutencao/transferencia | Recuperacao em terminal adjacente |
+| 5 | Abandono com Itens | 60s + cliente ausente | Bloqueio pós-aviso | `SESSION_ABANDONED` | Limpar sessao | `CLEAR_AND_RESET_SESSION` |
 
 ---
 
-# 34. Matriz de Comunicação
+## 34. Matriz de Comunicação
 
-| Situação | Origem | Destino | Canal |
+| Situacao | Origem | Destino | Canal |
 |---|---|---|---|
-| Alerta local | Terminal | Funcionário | MQTT → WebSocket |
-| Comando local | Funcionário | Terminal | HTTP/3 mTLS → Gateway → MQTT |
-| Alerta externo | Terminal | Funcionário | AWS IoT → SNS → FCM/APNs |
-| Comando externo | Funcionário | Terminal | AWS IoT → Cloud Bridge → Edge Broker |
-| Sincronização | Edge | Cloud | Greengrass Stream Manager → SQS FIFO |
-| Confirmação | Cloud | Edge | MQTT |
+| Alerta local | Terminal | Funcionario | MQTT → WebSocket |
+| Comando local | Funcionario | Terminal | HTTP/3 mTLS → Gateway → MQTT |
+| Alerta externo | Terminal | Funcionario | AWS IoT → SNS → FCM/APNs |
+| Comando externo | Funcionario | Terminal | AWS IoT → Cloud Bridge → Edge Broker |
+| Sincronizacao | Edge | Cloud | Greengrass Stream Manager → SQS FIFO |
+| Confirmacao | Cloud | Edge | MQTT |
 | Pagamento PIX | AWS/PSP | Terminal | Webhook → AWS → MQTT/WebSocket |
 
 ---
 
-# 35. Algoritmo-Mãe Consolidado
+## 35. Algoritmo-Mãe Consolidado
 
-O algoritmo abaixo representa a integração de todos os fluxos desenvolvidos.
+O algoritmo abaixo representa a integracao de todos os fluxos desenvolvidos.
 
 ```text
 ALGORITMO SUPERMERCADO_AUTONOMO_MENSAGERIA
 
-INÍCIO
+INICIO
 
     ==================================================
-    1. INICIALIZAÇÃO
+    1. INICIALIZACAO
     ==================================================
 
     InicializarTerminal()
@@ -1862,21 +1866,21 @@ INÍCIO
     2. LOOP PRINCIPAL
     ==================================================
 
-    ENQUANTO sistema_ativo = VERDADEIRO FAÇA
+    ENQUANTO sistema_ativo = VERDADEIRO FACA
 
 
         ==================================================
-        2.1 MONITORAMENTO DE COMUNICAÇÃO
+        2.1 MONITORAMENTO DE COMUNICACAO
         ==================================================
 
         MonitorarConectividade()
 
 
         ==================================================
-        2.2 RECUPERAÇÃO DE COMUNICAÇÃO
+        2.2 RECUPERACAO DE COMUNICACAO
         ==================================================
 
-        SE comunicacao_restaurada() ENTÃO
+        SE comunicacao_restaurada() ENTAO
 
             estadoComunicacao ← RECOVERING
 
@@ -1886,13 +1890,13 @@ INÍCIO
 
 
         ==================================================
-        2.3 OBTENÇÃO DE EVENTO
+        2.3 OBTENCAO DE EVENTO
         ==================================================
 
         evento ← AguardarEvento()
 
 
-        SE evento = NENHUM_EVENTO ENTÃO
+        SE evento = NENHUM_EVENTO ENTAO
 
             VerificarAbandono()
             VerificarHardware()
@@ -1904,10 +1908,10 @@ INÍCIO
 
 
         ==================================================
-        2.4 DETECÇÃO DE EXCEÇÕES
+        2.4 DETECCAO DE EXCECOES
         ==================================================
 
-        SE detectar_divergencia_peso(evento) ENTÃO
+        SE detectar_divergencia_peso(evento) ENTAO
 
             TratarDivergenciaPesoOuSweethearting(evento)
 
@@ -1916,7 +1920,7 @@ INÍCIO
         FIM_SE
 
 
-        SE detectar_sweethearting(evento) ENTÃO
+        SE detectar_sweethearting(evento) ENTAO
 
             TratarDivergenciaPesoOuSweethearting(evento)
 
@@ -1925,7 +1929,7 @@ INÍCIO
         FIM_SE
 
 
-        SE detectar_restricao_etaria(evento) ENTÃO
+        SE detectar_restricao_etaria(evento) ENTAO
 
             TratarRestricaoEtaria(evento.produto)
 
@@ -1934,7 +1938,7 @@ INÍCIO
         FIM_SE
 
 
-        SE detectar_queda_WAN_PIX(evento) ENTÃO
+        SE detectar_queda_WAN_PIX(evento) ENTAO
 
             TratarQuedaWANPIX()
 
@@ -1943,7 +1947,7 @@ INÍCIO
         FIM_SE
 
 
-        SE detectar_falha_hardware(evento) ENTÃO
+        SE detectar_falha_hardware(evento) ENTAO
 
             TratarFalhaHardware(evento.falha)
 
@@ -1952,7 +1956,7 @@ INÍCIO
         FIM_SE
 
 
-        SE detectar_abandono(evento) ENTÃO
+        SE detectar_abandono(evento) ENTAO
 
             TratarAbandonoTerminal()
 
@@ -1962,7 +1966,7 @@ INÍCIO
 
 
         ==================================================
-        2.5 OPERAÇÃO NORMAL
+        2.5 OPERACAO NORMAL
         ==================================================
 
         ProcessarOperacaoNormal(evento)
@@ -1974,7 +1978,7 @@ INÍCIO
 
         comando ← VerificarComandosPendentes()
 
-        SE comando ≠ NENHUM ENTÃO
+        SE comando ≠ NENHUM ENTAO
 
             ProcessarComando(comando)
 
@@ -1994,7 +1998,7 @@ FIM
 
 ---
 
-# 36. Fluxo Geral Consolidado
+## 36. Fluxo Geral Consolidado
 
 ```text
                          ┌─────────────────────┐
@@ -2005,13 +2009,13 @@ FIM
                                     │
                                     ▼
                          ┌─────────────────────┐
-                         │ Existe exceção?     │
+                         │ Existe excecao?     │
                          └──────────┬──────────┘
-                              NÃO   │   SIM
+                              NAO   │   SIM
                               │     │
                               ▼     ▼
-                     Operação normal  Classificar
-                                      exceção
+                     Operacao normal  Classificar
+                                      excecao
                                          │
                                          ▼
                                 Alterar estado
@@ -2021,9 +2025,9 @@ FIM
                                          │
                                          ▼
                             ┌─────────────────────┐
-                            │ Comunicação local?  │
+                            │ Comunicacao local?  │
                             └──────────┬──────────┘
-                                 SIM  │  NÃO
+                                 SIM  │  NAO
                                  │    │
                                  ▼    ▼
                               Gateway  AWS
@@ -2032,19 +2036,19 @@ FIM
                               WebSocket
                                  │
                                  ▼
-                         Dispositivo funcionário
+                         Dispositivo funcionario
                                  │
                                  ▼
-                            Ação humana
+                            Acao humana
                                  │
                                  ▼
                               Comando
                                  │
                                  ▼
                          ┌────────────────────┐
-                         │ Comunicação local? │
+                         │ Comunicacao local? │
                          └─────────┬──────────┘
-                              SIM  │  NÃO
+                              SIM  │  NAO
                               │    │
                               ▼    ▼
                            Gateway AWS IoT
@@ -2060,14 +2064,14 @@ FIM
                        Executar comando
                                 │
                                 ▼
-                       Validar resolução
+                       Validar resolucao
                                 │
                          ┌──────┴──────┐
                          │             │
-                       SIM            NÃO
+                       SIM            NAO
                          │             │
                          ▼             ▼
-                    Finalizar      Manter exceção
+                    Finalizar      Manter excecao
                          │
                          ▼
                       Auditoria
@@ -2075,7 +2079,7 @@ FIM
 
 ---
 
-# 37. Fluxo de Recuperação da Comunicação
+## 37. Fluxo de Recuperação da Comunicação
 
 ```text
               ┌───────────────┐
@@ -2089,26 +2093,26 @@ FIM
               │    OFFLINE    │
               └───────┬───────┘
                       │
-             Tentar comunicação
+             Tentar comunicacao
                       │
               ┌───────┴───────┐
               │               │
-           Disponível       Indisponível
+           Disponivel       Indisponivel
               │               │
               ▼               ▼
          RECOVERING         OFFLINE
               │
               ▼
-        Sincronização
+        Sincronizacao
               │
               ▼
-         Deduplicação
+         Deduplicacao
               │
               ▼
-        Reconciliação
+        Reconciliacao
               │
               ▼
-          Confirmação
+          Confirmacao
               │
               ▼
              LOCAL
@@ -2116,51 +2120,51 @@ FIM
 
 ---
 
-# 38. Fluxo de Exceção Genérico
+## 38. Fluxo de Exceção Genérico
 
-Todos os cenários podem ser representados pelo seguinte modelo:
+Todos os cenarios podem ser representados pelo seguinte modelo:
 
 ```text
 [EVENTO]
     ↓
-[DETECÇÃO]
+[DETECCAO]
     ↓
-[CLASSIFICAÇÃO]
+[CLASSIFICACAO]
     ↓
-[ALTERAÇÃO DE ESTADO]
+[ALTERACAO DE ESTADO]
     ↓
-[GERAÇÃO DE ALERTA]
+[GERACAO DE ALERTA]
     ↓
 [ROTEAMENTO]
     ↓
-[FUNCIONÁRIO]
+[FUNCIONARIO]
     ↓
-[AÇÃO]
+[ACAO]
     ↓
 [COMANDO]
     ↓
-[VALIDAÇÃO]
+[VALIDACAO]
     ↓
-[EXECUÇÃO]
+[EXECUCAO]
     ↓
-[CONFIRMAÇÃO]
+[CONFIRMACAO]
     ↓
-[RESOLUÇÃO]
+[RESOLUCAO]
     ↓
 [AUDITORIA]
 ```
 
-Esse fluxo constitui o núcleo conceitual do algoritmo-mãe.
+Esse fluxo constitui o nucleo conceitual do algoritmo-mae.
 
 ---
 
-# 39. Decisões de Consolidação Arquitetural
+## 39. Decisões de Consolidação Arquitetural
 
-Durante a transformação do documento técnico em um algoritmo único, algumas decisões foram necessárias para representar fluxos que estavam parcialmente descritos.
+Durante a transformacao do documento tecnico em um algoritmo unico, algumas decisoes foram necessarias para representar fluxos que estavam parcialmente descritos.
 
-Essas decisões não devem ser interpretadas como novos requisitos originais do documento, mas como **consolidações necessárias para fechar o algoritmo**.
+Essas decisoes nao devem ser interpretadas como novos requisitos originais do documento, mas como **consolidacoes necessarias para fechar o algoritmo**.
 
-## 39.1 Retorno de comandos pelo fallback
+### 39.1 Retorno de comandos pelo fallback
 
 O documento descreve explicitamente o caminho de alerta pela nuvem:
 
@@ -2169,22 +2173,22 @@ Terminal
 → AWS IoT Core
 → Amazon SNS
 → FCM/APNs
-→ Funcionário
+→ Funcionario
 ```
 
-Porém, o retorno do comando quando o funcionário está fora da rede local não é detalhado com o mesmo nível de especificidade.
+Porém, o retorno do comando quando o funcionario esta fora da rede local nao e detalhado com o mesmo nivel de especificidade.
 
 Para fechar o fluxo bidirecional, foi adotado:
 
 ```text
-Funcionário
+Funcionario
 → AWS IoT Core
 → Cloud Bridge
 → Edge MQTT Broker
 → Terminal
 ```
 
-## 39.2 Normalização de `ReleaseTerminal`
+### 39.2 Normalização de `ReleaseTerminal`
 
 O documento utiliza:
 
@@ -2198,7 +2202,7 @@ em um ponto da arquitetura e:
 RELEASE_TERMINAL
 ```
 
-na matriz de exceções.
+na matriz de excecoes.
 
 Para o algoritmo, foi adotado:
 
@@ -2208,9 +2212,9 @@ RELEASE_TERMINAL
 
 como identificador padronizado do comando.
 
-## 39.3 Separação dos estados
+### 39.3 Separação dos estados
 
-Foi adotada a separação entre:
+Foi adotada a separacao entre:
 
 ```text
 Estado do Terminal
@@ -2219,7 +2223,7 @@ Estado do Terminal
 e:
 
 ```text
-Estado da Comunicação
+Estado da Comunicacao
 ```
 
 Isso evita interpretar:
@@ -2234,17 +2238,17 @@ como:
 TERMINAL OFFLINE
 ```
 
-O terminal pode continuar executando determinadas operações localmente mesmo quando a WAN estiver indisponível.
+O terminal pode continuar executando determinadas operacoes localmente mesmo quando a WAN estiver indisponível.
 
-## 39.4 Idempotência
+### 39.4 Idempotência
 
 Foi introduzido `CommandID` como mecanismo de controle de duplicidade dos comandos.
 
-Essa decisão é necessária para que retransmissões provocadas por falhas de comunicação não causem execução duplicada.
+Essa decisao e necessaria para que retransmissoes provocadas por falhas de comunicacao nao causem execucao duplicada.
 
-## 39.5 Pagamento PIX ambíguo
+### 39.5 Pagamento PIX ambíguo
 
-A perda da WAN durante o PIX não é interpretada automaticamente como:
+A perda da WAN durante o PIX nao e interpretada automaticamente como:
 
 ```text
 PAGAMENTO NEGADO
@@ -2262,19 +2266,19 @@ O estado permanece:
 PAYMENT_AMBIGUOUS_STATE
 ```
 
-até que exista confirmação suficiente da liquidação.
+ate que exista confirmacao suficiente da liquidacao.
 
 ---
 
-# 40. Regras Fundamentais do Sistema
+## 40. Regras Fundamentais do Sistema
 
 ### Regra 1 — Edge-first
 
-Sempre que possível, o processamento deve ocorrer localmente.
+Sempre que possivel, o processamento deve ocorrer localmente.
 
 ### Regra 2 — Comunicação local é prioritária
 
-Quando o funcionário estiver na rede local, utiliza-se:
+Quando o funcionario estiver na rede local, utiliza-se:
 
 ```text
 MQTT + WebSocket + mTLS
@@ -2282,11 +2286,11 @@ MQTT + WebSocket + mTLS
 
 ### Regra 3 — Nuvem funciona como fallback
 
-Quando a rede local não estiver disponível para o funcionário, utiliza-se a infraestrutura de nuvem.
+Quando a rede local nao estiver disponivel para o funcionario, utiliza-se a infraestrutura de nuvem.
 
 ### Regra 4 — Exceção bloqueia quando necessário
 
-Situações de risco podem colocar o terminal em:
+Situacoes de risco podem colocar o terminal em:
 
 ```text
 LOCKED_EXCEPTION
@@ -2298,15 +2302,15 @@ O alerta apenas comunica o evento.
 
 ### Regra 6 — Comando precisa ser autorizado
 
-A ação do funcionário deve ser validada antes da execução.
+A acao do funcionario deve ser validada antes da execucao.
 
 ### Regra 7 — Execução precisa ser confirmada
 
-O envio de um comando não significa que o terminal o executou.
+O envio de um comando nao significa que o terminal o executou.
 
 ### Regra 8 — PIX ambíguo permanece ambíguo
 
-Sem confirmação da liquidação, não se assume sucesso ou falha.
+Sem confirmacao da liquidacao, nao se assume sucesso ou falha.
 
 ### Regra 9 — Falha crítica de hardware gera indisponibilidade
 
@@ -2318,15 +2322,15 @@ OUT_OF_SERVICE
 
 ### Regra 10 — Toda exceção deve ser auditável
 
-O histórico deve permitir reconstruir o evento completo.
+O historico deve permitir reconstruir o evento completo.
 
 ---
 
-# 41. Tecnologias Relacionadas
+## 41. Tecnologias Relacionadas
 
-A arquitetura técnica utiliza diferentes tecnologias conforme a camada.
+A arquitetura tecnica utiliza diferentes tecnologias conforme a camada.
 
-## Nuvem
+### Nuvem
 
 ```text
 AWS IoT Core
@@ -2341,7 +2345,7 @@ Amazon S3
 Amazon SNS
 ```
 
-## Edge
+### Edge
 
 ```text
 Rust
@@ -2352,7 +2356,7 @@ AWS IoT Greengrass v2
 TensorRT
 ```
 
-## Aplicação do Funcionário
+### Aplicação do Funcionário
 
 ```text
 Flutter
@@ -2367,11 +2371,11 @@ SQLCipher
 
 ---
 
-# 42. Segurança da Comunicação
+## 42. Segurança da Comunicação
 
-A comunicação deve utilizar mecanismos de autenticação e criptografia compatíveis com a arquitetura.
+A comunicacao deve utilizar mecanismos de autenticacao e criptografia compativeis com a arquitetura.
 
-Entre os mecanismos especificados estão:
+Entre os mecanismos especificados estao:
 
 ```text
 mTLS
@@ -2384,13 +2388,13 @@ HTTP/3
 
 A arquitetura utiliza certificados individuais para os terminais no AWS IoT Core.
 
-A comunicação local entre o dispositivo do funcionário e o Edge Gateway utiliza mTLS.
+A comunicacao local entre o dispositivo do funcionario e o Edge Gateway utiliza mTLS.
 
 ---
 
-# 43. Rastreabilidade
+## 43. Rastreabilidade
 
-Cada operação relevante deve possuir identificação suficiente para rastreamento.
+Cada operacao relevante deve possuir identificacao suficiente para rastreamento.
 
 Exemplos:
 
@@ -2401,7 +2405,7 @@ txid
 UUIDv7
 CommandID
 Timestamp
-Tipo da exceção
+Tipo da excecao
 Estado
 Resultado
 ```
@@ -2413,9 +2417,9 @@ Evento
     +
 Terminal
     +
-Transação
+Transacao
     +
-Funcionário
+Funcionario
     +
 Comando
     +
@@ -2424,22 +2428,22 @@ Resultado
 
 ---
 
-# 44. Conclusão
+## 44. Conclusão
 
-O algoritmo desenvolvido transforma a arquitetura técnica do supermercado autônomo em um modelo operacional estruturado para **mensageria, comunicação e tratamento de exceções**.
+O algoritmo desenvolvido transforma a arquitetura tecnica do supermercado autonomo em um modelo operacional estruturado para **mensageria, comunicacao e tratamento de excecoes**.
 
-O ponto central do desenvolvimento é que uma exceção não representa apenas um alerta.
+O ponto central do desenvolvimento e que uma excecao nao representa apenas um alerta.
 
 Ela representa um ciclo completo:
 
 ```text
 Detectar
    ↓
-Bloquear ou alterar o fluxo quando necessário
+Bloquear ou alterar o fluxo quando necessario
    ↓
 Comunicar
    ↓
-Aguardar ação humana
+Aguardar acao humana
    ↓
 Receber comando
    ↓
@@ -2454,27 +2458,27 @@ Resolver
 Auditar
 ```
 
-A arquitetura mantém a abordagem **Edge-first**, priorizando comunicação local de baixa latência e utilizando a nuvem como mecanismo de fallback quando necessário.
+A arquitetura mantem a abordagem **Edge-first**, priorizando comunicacao local de baixa latencia e utilizando a nuvem como mecanismo de fallback quando necessario.
 
-Os cinco cenários especificados foram incorporados ao algoritmo-mãe:
+Os cinco cenarios especificados foram incorporados ao algoritmo-mae:
 
 ```text
-1. Divergência de Peso / Sweethearting
-2. Restrição Etária
-3. Queda de WAN Durante Transação PIX
-4. Falha Crítica de Hardware
+1. Divergencia de Peso / Sweethearting
+2. Restricao Etaria
+3. Queda de WAN Durante Transacao PIX
+4. Falha Critica de Hardware
 5. Abandono de Terminal com Itens
 ```
 
-Dessa forma, o algoritmo-mãe funciona como uma representação geral do comportamento do sistema, enquanto cada cenário de exceção constitui uma especialização desse mesmo fluxo.
+Dessa forma, o algoritmo-mae funciona como uma representacao geral do comportamento do sistema, enquanto cada cenario de excecao constitui uma especializacao desse mesmo fluxo.
 
 ---
 
-# 45. Resumo Final do Algoritmo
+## 45. Resumo Final do Algoritmo
 
 ```text
 ┌───────────────────────────────────────────────┐
-│             SUPERMERCADO AUTÔNOMO             │
+│             SUPERMERCADO AUTONOMO             │
 └───────────────────────┬───────────────────────┘
                         │
                         ▼
@@ -2485,12 +2489,12 @@ Dessa forma, o algoritmo-mãe funciona como uma representação geral do comport
                         ▼
                 ┌───────────────┐
                 │ Detectar      │
-                │ exceção       │
+                │ excecao       │
                 └───────┬───────┘
                         │
                ┌────────┴────────┐
                │                 │
-              NÃO               SIM
+              NAO               SIM
                │                 │
                ▼                 ▼
           Fluxo normal     Alterar estado
@@ -2499,9 +2503,9 @@ Dessa forma, o algoritmo-mãe funciona como uma representação geral do comport
                            Gerar alerta
                                  │
                                  ▼
-                         Comunicação local?
+                         Comunicacao local?
                            /            \
-                         SIM            NÃO
+                         SIM            NAO
                          │               │
                          ▼               ▼
                     WebSocket        AWS IoT
@@ -2510,151 +2514,149 @@ Dessa forma, o algoritmo-mãe funciona como uma representação geral do comport
                          │               │
                          └───────┬───────┘
                                  ▼
-                           Funcionário
+                           Funcionario
                                  │
                                  ▼
-                             Ação
+                             Acao
                                  │
                                  ▼
                             Comando
                                  │
                                  ▼
-                           Validação
+                           Validacao
                                  │
                                  ▼
-                            Execução
+                            Execucao
                                  │
                                  ▼
-                           Confirmação
+                           Confirmacao
                                  │
                          ┌───────┴───────┐
                          │               │
                        RESOLVE         FALHA
                          │               │
                          ▼               ▼
-                     Auditoria      Manter exceção
+                     Auditoria      Manter excecao
                          │
                          ▼
                   Retorno ao fluxo
 ```
 
-
 ---
 
-# 46. Metodologia de Desenvolvimento — Prompts Utilizados
+## 46. Metodologia de Desenvolvimento — Prompts Utilizados
 
-Esta seção registra os dois prompts utilizados na metodologia de desenvolvimento. O primeiro funciona como prompt-base para orientar a construção da tarefa; o segundo é a especificação operacional detalhada utilizada para conduzir o desenvolvimento técnico. Eles complementam o conteúdo técnico apresentado nas seções anteriores.
+Esta secao registra os dois prompts utilizados na metodologia de desenvolvimento. O primeiro funciona como prompt-base para orientar a construcao da tarefa; o segundo e a especificacao operacional detalhada utilizada para conduzir o desenvolvimento tecnico. Eles complementam o conteudo tecnico apresentado nas secoes anteriores.
 
-## 46.1 Prompt 1 — Prompt-base
+### 46.1 Prompt 1 — Prompt-base
 
 ```text
 # PROMPT 1 — PROMPT-BASE
 
-Sou aluno de Sistemas de Informação e estou desenvolvendo, junto com meu grupo, um projeto acadêmico sobre a arquitetura de um supermercado autônomo. Vou fornecer um documento técnico que descreve toda a arquitetura do sistema. Quero que você leia o documento inteiro antes de começar a desenvolver qualquer coisa, porque a solução precisa ser baseada no que está realmente definido nele.
+Sou aluno de Sistemas de Informacao e estou desenvolvendo, junto com meu grupo, um projeto academico sobre a arquitetura de um supermercado autonomo. Vou fornecer um documento tecnico que descreve toda a arquitetura do sistema. Quero que você leia o documento inteiro antes de comecar a desenvolver qualquer coisa, porque a solucao precisa ser baseada no que esta realmente definido nele.
 
-Meu grupo ficou responsável pela Parte 4 — Mensageria e Exceções. Porém, não quero que você desenvolva essa parte de forma isolada. Primeiro quero que você entenda como o supermercado inteiro funciona, quais são seus componentes, como eles se comunicam, quais estados existem, quais eventos acontecem, como funcionam os sensores, o pagamento, a operação offline, a sincronização e o tratamento de falhas. Depois dessa compreensão geral, quero que você construa um algoritmo-mãe que represente o funcionamento geral do sistema. Esse algoritmo-mãe será a base para desenvolver o algoritmo específico da nossa Parte 4.
+Meu grupo ficou responsavel pela Parte 4 — Mensageria e Excecoes. Porém, nao quero que você desenvolva essa parte de forma isolada. Primeiro quero que você entenda como o supermercado inteiro funciona, quais sao seus componentes, como eles se comunicam, quais estados existem, quais eventos acontecem, como funcionam os sensores, o pagamento, a operacao offline, a sincronizacao e o tratamento de falhas. Depois dessa compreensao geral, quero que você construa um algoritmo-mae que represente o funcionamento geral do sistema. Esse algoritmo-mae sera a base para desenvolver o algoritmo especifico da nossa Parte 4.
 
-Quero que você atue como um professor de Sistemas de Informação e também como um profissional experiente em arquitetura de software, mas explicando de uma forma que alunos de graduação consigam compreender e defender academicamente. Não quero simplesmente um código pronto. Quero entender a lógica que está sendo construída.
+Quero que você atue como um professor de Sistemas de Informacao e também como um profissional experiente em arquitetura de software, mas explicando de uma forma que alunos de graduacao consigam compreender e defender academicamente. Nao quero simplesmente um codigo pronto. Quero entender a logica que esta sendo construida.
 
-O resultado deve ser desenvolvido em pseudocódigo estruturado e ter um nível técnico-acadêmico. Preserve os nomes dos componentes, tecnologias, estados, eventos, mensagens e fluxos utilizados no documento.
+O resultado deve ser desenvolvido em pseudocodigo estruturado e ter um nivel tecnico-academico. Preserve os nomes dos componentes, tecnologias, estados, eventos, mensagens e fluxos utilizados no documento.
 
-É muito importante que você não invente informações e não altere silenciosamente o que está no documento. Se encontrar alguma lacuna, ambiguidade ou inconsistência, identifique claramente o problema, explique por que ele afeta o algoritmo e apresente uma solução proposta. Diferencie aquilo que está no documento daquilo que foi necessário definir durante o desenvolvimento.
+E muito importante que você nao invente informacoes e nao altere silenciosamente o que esta no documento. Se encontrar alguma lacuna, ambiguidade ou inconsistencia, identifique claramente o problema, explique por que ele afeta o algoritmo e apresente uma solucao proposta. Diferencie aquilo que esta no documento daquilo que foi necessario definir durante o desenvolvimento.
 
-Depois de construir o algoritmo-mãe, utilize-o para desenvolver a Parte 4 — Mensageria e Exceções, respeitando a ordem e os cinco cenários apresentados no documento.
+Depois de construir o algoritmo-mae, utilize-o para desenvolver a Parte 4 — Mensageria e Excecoes, respeitando a ordem e os cinco cenarios apresentados no documento.
 
-Quero que o desenvolvimento considere a comunicação entre terminal e funcionário, comunicação local, fallback pela nuvem, comandos de resolução, estados, eventos, tratamento de exceções, recuperação, operação offline, sincronização, segurança, idempotência, deduplicação e auditoria, sempre respeitando o que o documento realmente estabelece.
+Quero que o desenvolvimento considere a comunicacao entre terminal e funcionario, comunicacao local, fallback pela nuvem, comandos de resolucao, estados, eventos, tratamento de excecoes, recuperacao, operacao offline, sincronizacao, seguranca, idempotencia, deduplicacao e auditoria, sempre respeitando o que o documento realmente estabelece.
 
-No final, quero ter uma solução suficientemente organizada para posteriormente transformar todo o trabalho em um único README.md para o GitHub, onde o professor poderá avaliar o desenvolvimento.
+No final, quero ter uma solucao suficientemente organizada para posteriormente transformar todo o trabalho em um unico README.md para o GitHub, onde o professor podera avaliar o desenvolvimento.
 
-O mais importante é: primeiro compreender, depois abstrair no algoritmo-mãe, depois desenvolver a Parte 4 e somente então consolidar tudo em uma documentação final.
-
+O mais importante e: primeiro compreender, depois abstrair no algoritmo-mae, depois desenvolver a Parte 4 e somente então consolidar tudo em uma documentacao final.
 ```
 
-## 46.2 Prompt 2 — Prompt de desenvolvimento
+### 46.2 Prompt 2 — Prompt de desenvolvimento
 
 ```text
 # PROMPT 2 — PROMPT DE DESENVOLVIMENTO
 
-## PROJETO — SUPERMERCADO AUTÔNOMO
-### Desenvolvimento do Algoritmo-Mãe e da Parte 4 — Mensageria e Exceções
+## PROJETO — SUPERMERCADO AUTONOMO
+### Desenvolvimento do Algoritmo-Mae e da Parte 4 — Mensageria e Excecoes
 
-Sou aluno de Sistemas de Informação e estou desenvolvendo, junto com meu grupo, um projeto acadêmico de arquitetura de software para um supermercado autônomo.
+Sou aluno de Sistemas de Informacao e estou desenvolvendo, junto com meu grupo, um projeto academico de arquitetura de software para um supermercado autonomo.
 
-O documento técnico fornecido nesta conversa é a fonte principal deste trabalho.
+O documento tecnico fornecido nesta conversa e a fonte principal deste trabalho.
 
-Meu grupo é responsável pela:
+Meu grupo e responsavel pela:
 
-**PARTE 4 — MENSAGERIA E EXCEÇÕES**
+**PARTE 4 — MENSAGERIA E EXCECOES**
 
-Quero que você desenvolva essa parte a partir da arquitetura completa apresentada no documento, e não como um módulo isolado.
+Quero que você desenvolva essa parte a partir da arquitetura completa apresentada no documento, e nao como um modulo isolado.
 
 O desenvolvimento deve seguir obrigatoriamente esta ordem:
 
 1. Leitura completa do documento;
-2. Compreensão da arquitetura;
-3. Identificação dos componentes envolvidos;
-4. Identificação dos estados e eventos;
-5. Identificação dos fluxos de comunicação;
-6. Construção do modelo geral de funcionamento;
-7. Construção do ALGORITMO-MÃE;
-8. Derivação do algoritmo específico da Parte 4;
-9. Aplicação aos cinco cenários de exceção;
-10. Tratamento de recuperação;
-11. Tratamento de operação offline;
-12. Tratamento de idempotência e deduplicação;
+2. Compreensao da arquitetura;
+3. Identificacao dos componentes envolvidos;
+4. Identificacao dos estados e eventos;
+5. Identificacao dos fluxos de comunicacao;
+6. Construcao do modelo geral de funcionamento;
+7. Construcao do ALGORITMO-MAE;
+8. Derivacao do algoritmo especifico da Parte 4;
+9. Aplicacao aos cinco cenarios de excecao;
+10. Tratamento de recuperacao;
+11. Tratamento de operacao offline;
+12. Tratamento de idempotencia e deduplicacao;
 13. Auditoria;
-14. Validação;
-15. Consolidação da documentação.
+14. Validacao;
+15. Consolidacao da documentacao.
 
 ## 1. SEU PAPEL
 
-Atue como professor universitário de Sistemas de Informação e arquiteto de software sênior.
+Atue como professor universitario de Sistemas de Informacao e arquiteto de software senior.
 
-Você deve possuir domínio sobre:
+Você deve possuir dominio sobre:
 
 - arquitetura de software;
-- sistemas distribuídos;
+- sistemas distribuidos;
 - Edge Computing;
 - IoT;
 - sistemas orientados a eventos;
-- mensageria assíncrona;
+- mensageria assincrona;
 - MQTT;
 - WebSocket;
-- máquinas de estados;
-- tratamento de exceções;
-- tolerância a falhas;
-- operação offline;
-- sincronização;
-- segurança;
+- maquinas de estados;
+- tratamento de excecoes;
+- tolerancia a falhas;
+- operacao offline;
+- sincronizacao;
+- seguranca;
 - auditoria.
 
-Porém, explique o raciocínio de maneira compatível com alunos de graduação em Sistemas de Informação.
+Porém, explique o raciocinio de maneira compativel com alunos de graduacao em Sistemas de Informacao.
 
-Não quero uma resposta excessivamente abstrata.
+Nao quero uma resposta excessivamente abstrata.
 
-Cada decisão importante deve ser explicada em termos de:
+Cada decisao importante deve ser explicada em termos de:
 
 **O QUE acontece?**  
 **POR QUE acontece?**  
 **QUANDO acontece?**  
 **QUEM executa?**  
-**QUAL mensagem/evento é produzido?**  
+**QUAL mensagem/evento e produzido?**  
 **QUAL estado muda?**  
 **COMO o sistema se recupera?**
 
 ## 2. FONTE PRINCIPAL
 
-Leia o documento técnico inteiro antes de desenvolver os algoritmos.
+Leia o documento tecnico inteiro antes de desenvolver os algoritmos.
 
-Não trabalhe somente com a seção 4.
+Nao trabalhe somente com a secao 4.
 
 Identifique no documento:
 
 - hardware;
 - sensores;
 - scanner;
-- balança;
-- câmera;
+- balanca;
+- camera;
 - PDV Core;
 - banco local;
 - Edge Computing;
@@ -2666,51 +2668,51 @@ Identifique no documento:
 - SQS;
 - Aurora;
 - DynamoDB;
-- dispositivos dos funcionários;
+- dispositivos dos funcionarios;
 - pagamento;
-- máquina de estados;
-- prevenção de perdas;
-- operação offline;
-- sincronização;
-- segurança;
+- maquina de estados;
+- prevencao de perdas;
+- operacao offline;
+- sincronizacao;
+- seguranca;
 - auditoria.
 
-Preserve a nomenclatura original sempre que possível.
+Preserve a nomenclatura original sempre que possivel.
 
-## 3. REGRA CONTRA INVENÇÃO
+## 3. REGRA CONTRA INVENCAO
 
-Não invente componentes, tecnologias, mensagens, estados ou regras que não estejam sustentados pelo documento.
+Nao invente componentes, tecnologias, mensagens, estados ou regras que nao estejam sustentados pelo documento.
 
-Quando algo não estiver suficientemente definido, classifique como:
+Quando algo nao estiver suficientemente definido, classifique como:
 
 **[DOCUMENTO]**  
-Informação explicitamente apresentada no documento.
+Informacao explicitamente apresentada no documento.
 
-**[INFERÊNCIA]**  
-Conclusão necessária para conectar partes que o documento já apresenta, sem alterar sua arquitetura.
+**[INFERENCIA]**  
+Conclusao necessaria para conectar partes que o documento ja apresenta, sem alterar sua arquitetura.
 
 **[PROPOSTA]**  
-Decisão criada para preencher uma lacuna necessária ao algoritmo.
+Decisao criada para preencher uma lacuna necessaria ao algoritmo.
 
-Sempre deixe essa diferença explícita.
+Sempre deixe essa diferenca explicita.
 
-## 4. IDENTIFICAÇÃO DE LACUNAS
+## 4. IDENTIFICACAO DE LACUNAS
 
 Se encontrar uma lacuna, apresente:
 
-- localização do problema;
-- informação existente;
-- informação ausente;
+- localizacao do problema;
+- informacao existente;
+- informacao ausente;
 - impacto no algoritmo;
-- solução proposta;
+- solucao proposta;
 - justificativa;
-- classificação como DOCUMENTO, INFERÊNCIA ou PROPOSTA.
+- classificacao como DOCUMENTO, INFERENCIA ou PROPOSTA.
 
-Não corrija silenciosamente o documento.
+Nao corrija silenciosamente o documento.
 
 ## 5. MODELO GERAL DO SISTEMA
 
-Antes do algoritmo-mãe, descreva conceitualmente o funcionamento geral.
+Antes do algoritmo-mae, descreva conceitualmente o funcionamento geral.
 
 Mostre:
 
@@ -2723,71 +2725,71 @@ Sensores
 ↓
 Processamento Edge
 ↓
-Validação
+Validacao
 ↓
-Carrinho/Sessão
+Carrinho/Sessao
 ↓
 Pagamento
 ↓
-Confirmação
+Confirmacao
 ↓
-Finalização
+Finalizacao
 ↓
-Sincronização
+Sincronizacao
 ↓
 Auditoria
 ```
 
-Inclua também os caminhos de exceção.
+Inclua também os caminhos de excecao.
 
-O algoritmo-mãe deve representar o comportamento geral e não somente a mensageria.
+O algoritmo-mae deve representar o comportamento geral e nao somente a mensageria.
 
-## 6. ALGORITMO-MÃE
+## 6. ALGORITMO-MAE
 
-Construa um algoritmo-mãe em pseudocódigo estruturado.
+Construa um algoritmo-mae em pseudocodigo estruturado.
 
 Ele deve representar pelo menos:
 
-1. Inicialização do terminal;
-2. Verificação dos componentes;
-3. Verificação da comunicação;
-4. Preparação da sessão;
-5. Operação normal;
+1. Inicializacao do terminal;
+2. Verificacao dos componentes;
+3. Verificacao da comunicacao;
+4. Preparacao da sessao;
+5. Operacao normal;
 6. Leitura dos produtos;
 7. Processamento dos sensores;
-8. Fusão das informações;
-9. Validação do item;
-10. Inclusão do item;
-11. Verificação de exceções;
-12. Bloqueio quando necessário;
+8. Fusao das informacoes;
+9. Validacao do item;
+10. Inclusao do item;
+11. Verificacao de excecoes;
+12. Bloqueio quando necessario;
 13. Mensageria;
-14. Atendimento pelo funcionário;
+14. Atendimento pelo funcionario;
 15. Pagamento;
 16. Tratamento de falha de pagamento;
-17. Finalização;
-18. Persistência;
-19. Sincronização;
+17. Finalizacao;
+18. Persistencia;
+19. Sincronizacao;
 20. Auditoria;
-21. Encerramento ou nova sessão.
+21. Encerramento ou nova sessao.
 
 O algoritmo deve possuir:
 
 - SE;
-- SENÃO;
+- SENAO;
 - CASO;
 - ENQUANTO;
 - estados;
 - eventos;
 - chamadas de procedimentos;
 - retornos;
-- condições de erro;
-- recuperação.
+- condicoes de erro;
+- recuperacao.
 
-## 7. MÁQUINA DE ESTADOS
+## 7. MAQUINA DE ESTADOS
 
-Considere a máquina de estados definida no documento.
+Considere a maquina de estados definida no documento.
 
-Quando aplicável, trabalhe com estados como:
+Quando aplicavel, trabalhe com estados como:
 
 ```text
 IDLE
@@ -2800,13 +2802,13 @@ OUT_OF_SERVICE
 RECOVERING
 ```
 
-Não adicione estados apenas por conveniência.
+Nao adicione estados apenas por conveniencia.
 
-Quando um estado adicional for necessário para organizar o algoritmo, classifique-o como **PROPOSTA DE CONSOLIDAÇÃO**.
+Quando um estado adicional for necessario para organizar o algoritmo, classifique-o como **PROPOSTA DE CONSOLIDACAO**.
 
-## 8. SEPARAÇÃO DE ESTADOS
+## 8. SEPARACAO DE ESTADOS
 
-Para evitar confusão, diferencie três dimensões:
+Para evitar confusao, diferencie tres dimensoes:
 
 ### Estado do terminal
 
@@ -2820,7 +2822,7 @@ WAITING_PIX_SETTLEMENT
 OUT_OF_SERVICE
 ```
 
-### Estado da comunicação
+### Estado da comunicacao
 
 Exemplo:
 
@@ -2831,7 +2833,7 @@ DEGRADED
 RECONNECTING
 ```
 
-### Estado da exceção
+### Estado da excecao
 
 Exemplo:
 
@@ -2844,70 +2846,70 @@ COMMAND_EXECUTED
 RESOLVED
 ```
 
-Não misture esses estados.
+Nao misture esses estados.
 
-Explique quando uma dimensão altera outra.
+Explique quando uma dimensao altera outra.
 
 ## 9. PARTE 4 — MENSAGERIA
 
-Depois do algoritmo-mãe, desenvolva o algoritmo específico da Parte 4.
+Depois do algoritmo-mae, desenvolva o algoritmo especifico da Parte 4.
 
-A lógica deve contemplar:
+A logica deve contemplar:
 
 ```text
 EVENTO
 ↓
-DETECÇÃO
+DETECCAO
 ↓
-VALIDAÇÃO
+VALIDACAO
 ↓
-CRIAÇÃO DA MENSAGEM
+CRIACAO DA MENSAGEM
 ↓
-PUBLICAÇÃO
+PUBLICACAO
 ↓
 ROTEAMENTO
 ↓
 ENTREGA
 ↓
-NOTIFICAÇÃO DO FUNCIONÁRIO
+NOTIFICACAO DO FUNCIONARIO
 ↓
-AÇÃO DO FUNCIONÁRIO
+ACAO DO FUNCIONARIO
 ↓
 COMANDO
 ↓
-VALIDAÇÃO
+VALIDACAO
 ↓
-EXECUÇÃO
+EXECUCAO
 ↓
-CONFIRMAÇÃO
+CONFIRMACAO
 ↓
 AUDITORIA
 ↓
-RESOLUÇÃO
+RESOLUCAO
 ```
 
-## 10. ALERTA NÃO É RESOLUÇÃO
+## 10. ALERTA NAO E RESOLUCAO
 
 O algoritmo deve diferenciar claramente:
 
-1. exceção detectada;
+1. excecao detectada;
 2. alerta criado;
 3. alerta publicado;
 4. alerta entregue;
-5. funcionário notificado;
-6. funcionário autenticado;
+5. funcionario notificado;
+6. funcionario autenticado;
 7. comando criado;
 8. comando enviado;
 9. comando recebido;
 10. comando validado;
 11. comando executado;
 12. estado alterado;
-13. exceção resolvida;
-14. operação retomada.
+13. excecao resolvida;
+14. operacao retomada.
 
-Não considere que publicar uma mensagem significa que o problema foi resolvido.
+Nao considere que publicar uma mensagem significa que o problema foi resolvido.
 
-## 11. COMUNICAÇÃO LOCAL
+## 11. COMUNICACAO LOCAL
 
 Utilize o fluxo definido no documento:
 
@@ -2918,7 +2920,7 @@ EDGE MQTT BROKER / AWS IoT CORE
 ↓
 LOCAL WEBSOCKET GATEWAY
 ↓
-TABLET / SMARTWATCH DO FUNCIONÁRIO
+TABLET / SMARTWATCH DO FUNCIONARIO
 ```
 
 Considere:
@@ -2926,10 +2928,10 @@ Considere:
 - MQTT;
 - WebSocket;
 - TLS/mTLS;
-- baixa latência;
-- operação local mesmo quando a internet estiver indisponível.
+- baixa latencia;
+- operacao local mesmo quando a internet estiver indisponivel.
 
-## 12. FALLBACK DE COMUNICAÇÃO
+## 12. FALLBACK DE COMUNICACAO
 
 Considere o fallback descrito no documento:
 
@@ -2944,21 +2946,21 @@ AMAZON SNS
 ↓
 FCM/APNs
 ↓
-DISPOSITIVO DO FUNCIONÁRIO
+DISPOSITIVO DO FUNCIONARIO
 ```
 
-O fallback deve ser acionado quando a comunicação local não estiver disponível ou quando o funcionário estiver fora do alcance da rede local, conforme a arquitetura.
+O fallback deve ser acionado quando a comunicacao local nao estiver disponivel ou quando o funcionario estiver fora do alcance da rede local, conforme a arquitetura.
 
-## 13. COMUNICAÇÃO DE RETORNO
+## 13. COMUNICACAO DE RETORNO
 
-O funcionário não apenas recebe mensagens.
+O funcionario nao apenas recebe mensagens.
 
 Ele também envia comandos.
 
 Fluxo local:
 
 ```text
-FUNCIONÁRIO
+FUNCIONARIO
 ↓
 HTTP/3 + mTLS
 ↓
@@ -2971,13 +2973,13 @@ EDGE BROKER
 TERMINAL
 ```
 
-Caso seja necessária comunicação fora da rede local, represente o caminho de retorno correspondente pela infraestrutura de nuvem.
+Caso seja necessaria comunicacao fora da rede local, represente o caminho de retorno correspondente pela infraestrutura de nuvem.
 
-Se esse retorno não estiver completamente especificado no documento, marque como **PROPOSTA DE CONSOLIDAÇÃO** e explique a decisão.
+Se esse retorno nao estiver completamente especificado no documento, marque como **PROPOSTA DE CONSOLIDACAO** e explique a decisao.
 
-## 14. IDEMPOTÊNCIA
+## 14. IDEMPOTENCIA
 
-Comandos críticos devem possuir identificador único.
+Comandos criticos devem possuir identificador unico.
 
 Utilize:
 
@@ -2988,52 +2990,52 @@ CommandID
 Antes de executar um comando:
 
 1. verificar autenticidade;
-2. verificar autorização;
+2. verificar autorizacao;
 3. verificar terminal;
-4. verificar exceção;
+4. verificar excecao;
 5. verificar CommandID;
 6. verificar estado atual;
-7. verificar se o comando já foi executado;
+7. verificar se o comando ja foi executado;
 8. executar somente se for novo;
 9. registrar resultado.
 
-Se o mesmo comando chegar duas vezes, ele não deve provocar duas execuções.
+Se o mesmo comando chegar duas vezes, ele nao deve provocar duas execucoes.
 
-## 15. DEDUPLICAÇÃO
+## 15. DEDUPLICACAO
 
 Mensagens e eventos podem ser retransmitidos.
 
 O algoritmo deve impedir que uma mensagem duplicada provoque:
 
 - dois desbloqueios;
-- duas liberações;
-- duas aprovações;
-- duas finalizações;
-- duas alterações financeiras;
-- duas alterações de estoque.
+- duas liberacoes;
+- duas aprovacoes;
+- duas finalizacoes;
+- duas alteracoes financeiras;
+- duas alteracoes de estoque.
 
-Explique como o identificador da mensagem/transação permite detectar duplicidade.
+Explique como o identificador da mensagem/transacao permite detectar duplicidade.
 
-## 16. OPERAÇÃO OFFLINE
+## 16. OPERACAO OFFLINE
 
 O sistema deve respeitar a arquitetura Edge-first.
 
-Quando a WAN estiver indisponível:
+Quando a WAN estiver indisponivel:
 
 - o terminal deve continuar funcionando localmente quando permitido;
 - utilizar SQLite;
 - utilizar WAL;
-- armazenar eventos/transações pendentes;
+- armazenar eventos/transacoes pendentes;
 - utilizar Outbox;
 - utilizar UUIDv7;
-- aguardar sincronização.
+- aguardar sincronizacao.
 
-Quando a conexão retornar:
+Quando a conexao retornar:
 
 ```text
 OFFLINE
 ↓
-DETECÇÃO DE ONLINE
+DETECCAO DE ONLINE
 ↓
 SYNC COORDINATOR
 ↓
@@ -3045,26 +3047,26 @@ SQS FIFO
 ↓
 PROCESSAMENTO NA NUVEM
 ↓
-DEDUPLICAÇÃO
+DEDUPLICACAO
 ↓
-PERSISTÊNCIA
+PERSISTENCIA
 ↓
 ACK
 ↓
-ATUALIZAÇÃO LOCAL
+ATUALIZACAO LOCAL
 ```
 
-## 17. CENÁRIO 1 — DIVERGÊNCIA DE PESO / SWEETHEARTING
+## 17. CENARIO 1 — DIVERGENCIA DE PESO / SWEETHEARTING
 
-Utilize o cenário exatamente como definido no documento.
+Utilize o cenario exatamente como definido no documento.
 
 Gatilhos principais:
 
 - Z > 2.5;
 - objeto transferido sem scan;
 - Optical Bypass;
-- múltiplos itens;
-- retirada prematura quando aplicável.
+- multiplos itens;
+- retirada prematura quando aplicavel.
 
 Fluxo:
 
@@ -3076,8 +3078,8 @@ detectar
 → desativar leitores
 → criar THEFT_PREVENTION_TRIGGER
 → publicar alerta
-→ notificar funcionário
-→ funcionário verificar item
+→ notificar funcionario
+→ funcionario verificar item
 → corrigir
 → enviar RELEASE_TERMINAL
 → autenticar
@@ -3088,7 +3090,7 @@ detectar
 → retornar ao estado operacional adequado.
 ```
 
-## 18. CENÁRIO 2 — RESTRIÇÃO ETÁRIA
+## 18. CENARIO 2 — RESTRICAO ETARIA
 
 Gatilho:
 
@@ -3100,24 +3102,24 @@ Fluxo:
 
 ```text
 SKU identificado
-→ verificar restrição
-→ interromper inclusão
+→ verificar restricao
+→ interromper inclusao
 → informar cliente
 → gerar AGE_GATE_REQUIRED
 → enviar alerta
-→ funcionário recebe
+→ funcionario recebe
 → verifica documento
 → envia APPROVE_AGE
-→ autenticação
-→ autorização
-→ validação
-→ execução
+→ autenticacao
+→ autorizacao
+→ validacao
+→ execucao
 → desbloqueio
-→ inclusão do item
+→ inclusao do item
 → auditoria.
 ```
 
-## 19. CENÁRIO 3 — QUEDA DE WAN DURANTE PIX
+## 19. CENARIO 3 — QUEDA DE WAN DURANTE PIX
 
 Gatilhos:
 
@@ -3127,7 +3129,7 @@ Gatilhos:
 
 REGRA:
 
-Não transformar automaticamente a transação em pagamento recusado.
+Nao transformar automaticamente a transacao em pagamento recusado.
 
 Utilizar:
 
@@ -3145,100 +3147,100 @@ detectar perda
 → consultar status
 → polling
 → tentar LTE
-→ notificar funcionário
+→ notificar funcionario
 → apresentar txid
-→ verificar liquidação
+→ verificar liquidacao
 → confirmar resultado.
 ```
 
-Se a comunicação secundária falhar:
+Se a comunicacao secundaria falhar:
 
-permitir `MANUAL_OVERRIDE_PAYMENT` somente mediante validação adequada e registrar auditoria.
+permitir `MANUAL_OVERRIDE_PAYMENT` somente mediante validacao adequada e registrar auditoria.
 
-## 20. CENÁRIO 4 — FALHA CRÍTICA DE HARDWARE
+## 20. CENARIO 4 — FALHA CRITICA DE HARDWARE
 
 Gatilhos:
 
-- perda de keep-alive da balança;
-- erro do driver de vídeo;
-- falha crítica de periférico.
+- perda de keep-alive da balanca;
+- erro do driver de video;
+- falha critica de periferico.
 
 Fluxo:
 
 ```text
 detectar
 → classificar
-→ encerrar sessão de maneira segura
+→ encerrar sessao de maneira segura
 → informar cliente
 → gerar HARDWARE_FAULT
-→ informar manutenção
+→ informar manutencao
 → OUT_OF_SERVICE
-→ preservar transação pendente
-→ gerar mecanismo de recuperação
+→ preservar transacao pendente
+→ gerar mecanismo de recuperacao
 → permitir continuidade em terminal adjacente
 → registrar auditoria.
 ```
 
-## 21. CENÁRIO 5 — ABANDONO DE TERMINAL
+## 21. CENARIO 5 — ABANDONO DE TERMINAL
 
 Gatilhos:
 
-- 60 segundos sem interação;
-- ausência de cliente detectada.
+- 60 segundos sem interacao;
+- ausencia de cliente detectada.
 
 Fluxo:
 
 ```text
-detectar ausência
+detectar ausencia
 → aviso sonoro por 15 segundos
 → verificar retorno
 → se retornar, continuar
-→ se não retornar, bloquear
+→ se nao retornar, bloquear
 → gerar SESSION_ABANDONED
 → incluir carrinho e valor
-→ notificar funcionário
+→ notificar funcionario
 → receber CLEAR_AND_RESET_SESSION
 → validar
-→ limpar sessão
-→ emitir etiqueta quando aplicável
+→ limpar sessao
+→ emitir etiqueta quando aplicavel
 → retornar IDLE
 → auditoria.
 ```
 
-## 22. RECUPERAÇÃO
+## 22. RECUPERACAO
 
-Toda exceção deve possuir caminho de recuperação.
+Toda excecao deve possuir caminho de recuperacao.
 
-Para cada cenário, informe:
+Para cada cenario, informe:
 
 - estado inicial;
 - gatilho;
-- estado durante exceção;
+- estado durante excecao;
 - mensagem;
-- funcionário responsável;
+- funcionario responsavel;
 - comando;
-- validação;
-- estado após comando;
-- condição de sucesso;
-- condição de falha;
-- recuperação;
+- validacao;
+- estado apos comando;
+- condicao de sucesso;
+- condicao de falha;
+- recuperacao;
 - auditoria.
 
-## 23. SEGURANÇA
+## 23. SEGURANCA
 
 Para comandos sensíveis:
 
-1. autenticar funcionário;
-2. verificar autorização;
+1. autenticar funcionario;
+2. verificar autorizacao;
 3. verificar origem;
 4. verificar terminal;
-5. verificar exceção;
+5. verificar excecao;
 6. verificar estado;
 7. verificar CommandID;
 8. executar;
 9. registrar auditoria.
 
-Não permita que uma mensagem recebida diretamente altere um estado crítico sem validação.
+Nao permita que uma mensagem recebida diretamente altere um estado critico sem validacao.
 
 ## 24. AUDITORIA
 
@@ -3249,20 +3251,20 @@ Registre pelo menos quando aplicável:
 - EventID;
 - CommandID;
 - timestamp;
-- tipo da exceção;
+- tipo da excecao;
 - estado anterior;
 - estado posterior;
-- funcionário;
+- funcionario;
 - comando;
 - resultado;
-- evidência;
+- evidencia;
 - erro.
 
 A auditoria deve permitir reconstruir o que aconteceu.
 
 ## 25. FORMATO DOS ALGORITMOS
 
-Utilize pseudocódigo estruturado.
+Utilize pseudocodigo estruturado.
 
 Exemplo de estrutura:
 
@@ -3272,42 +3274,42 @@ ALGORITMO NomeDoAlgoritmo
 ENTRADA:
     ...
 
-SAÍDA:
+SAIDA:
     ...
 
-VARIÁVEIS:
+VARIAVEIS:
     ...
 
-INÍCIO
+INICIO
 
     ...
 
-    SE condição ENTÃO
+    SE condicao ENTAO
         ...
-    SENÃO
+    SENAO
         ...
     FIM-SE
 
 FIM
 ```
 
-Não utilize código Java, C, Python ou outra linguagem de programação.
+Nao utilize codigo Java, C, Python ou outra linguagem de programacao.
 
-O objetivo é especificar o comportamento do sistema antes da implementação.
+O objetivo e especificar o comportamento do sistema antes da implementacao.
 
-## 26. EXPLICAÇÃO DO PSEUDOCÓDIGO
+## 26. EXPLICACAO DO PSEUDOCODIGO
 
-Após cada algoritmo importante, explique:
+Apos cada algoritmo importante, explique:
 
 - objetivo;
 - entradas;
-- saídas;
-- variáveis;
-- decisões;
+- saidas;
+- variaveis;
+- decisoes;
 - estados;
 - eventos;
 - mensagens;
-- recuperação.
+- recuperacao.
 
 Explique também como o algoritmo se conecta à arquitetura.
 
@@ -3315,7 +3317,7 @@ Explique também como o algoritmo se conecta à arquitetura.
 
 Ao final, produza uma matriz:
 
-| Elemento | Origem no documento | Implementação no algoritmo | Observação |
+| Elemento | Origem no documento | Implementacao no algoritmo | Observacao |
 |----------|---------------------|----------------------------|------------|
 
 Inclua:
@@ -3324,129 +3326,102 @@ Inclua:
 - mensagens;
 - protocolos;
 - componentes;
-- exceções;
+- excecoes;
 - comandos;
-- mecanismos de recuperação.
+- mecanismos de recuperacao.
 
-## 28. MATRIZ DOS CINCO CENÁRIOS
+## 28. MATRIZ DOS CINCO CENARIOS
 
 Produza:
 
-| Cenário | Gatilho | Estado | Mensagem | Funcionário | Comando | Recuperação | Auditoria |
+| Cenario | Gatilho | Estado | Mensagem | Funcionario | Comando | Recuperacao | Auditoria |
 |----------|---------|--------|----------|-------------|---------|------------|-----------|
 
-## 29. DECISÕES DE CONSOLIDAÇÃO
+## 29. DECISOES DE CONSOLIDACAO
 
-No final, crie uma seção:
+No final, crie uma secao:
 
-**DECISÕES ARQUITETURAIS DE CONSOLIDAÇÃO**
+**DECISOES ARQUITETURAIS DE CONSOLIDACAO**
 
 Nela, registre somente aquilo que precisou ser definido para fechar lacunas do documento.
 
 Exemplos:
 
-- normalização de `ReleaseTerminal` para `RELEASE_TERMINAL`;
+- normalizacao de `ReleaseTerminal` para `RELEASE_TERMINAL`;
 - uso de `CommandID`;
-- separação entre estado do terminal, comunicação e exceção;
-- caminho de retorno quando o funcionário estiver fora da rede local;
-- estado `RECOVERING`, se necessário.
+- separacao entre estado do terminal, comunicacao e excecao;
+- caminho de retorno quando o funcionario estiver fora da rede local;
+- estado `RECOVERING`, se necessario.
 
-Não apresente essas decisões como se fossem originalmente escritas no documento.
+Nao apresente essas decisoes como se fossem originalmente escritas no documento.
 
-## 30. VALIDAÇÃO FINAL
+## 30. VALIDACAO FINAL
 
-Antes de concluir, faça uma verificação:
+Antes de concluir, faca uma verificacao:
 
 ```text
 [ ] Documento foi considerado integralmente.
-[ ] Algoritmo-mãe foi desenvolvido antes da Parte 4.
-[ ] Parte 4 deriva do algoritmo-mãe.
-[ ] Os cinco cenários foram implementados.
-[ ] Comunicação terminal → funcionário foi contemplada.
-[ ] Comunicação funcionário → terminal foi contemplada.
+[ ] Algoritmo-mae foi desenvolvido antes da Parte 4.
+[ ] Parte 4 deriva do algoritmo-mae.
+[ ] Os cinco cenarios foram implementados.
+[ ] Comunicacao terminal → funcionario foi contemplada.
+[ ] Comunicacao funcionario → terminal foi contemplada.
 [ ] Fallback foi contemplado.
-[ ] Operação offline foi contemplada.
-[ ] Recuperação foi contemplada.
-[ ] Idempotência foi contemplada.
-[ ] Deduplicação foi contemplada.
+[ ] Operacao offline foi contemplada.
+[ ] Recuperacao foi contemplada.
+[ ] Idempotencia foi contemplada.
+[ ] Deduplicacao foi contemplada.
 [ ] Auditoria foi contemplada.
 [ ] Estados foram diferenciados.
 [ ] Alertas foram diferenciados de comandos.
-[ ] Comandos foram diferenciados de resolução.
+[ ] Comandos foram diferenciados de resolucao.
 [ ] Lacunas foram identificadas.
-[ ] Propostas foram separadas do conteúdo original.
-[ ] Não foram inventados componentes sem identificação.
-[ ] O pseudocódigo está estruturado.
+[ ] Propostas foram separadas do conteudo original.
+[ ] Nao foram inventados componentes sem identificacao.
+[ ] O pseudocodigo esta estruturado.
 [ ] O material pode ser posteriormente consolidado em README.md.
 ```
 
 ## 31. RESULTADO FINAL
 
-A resposta final deverá demonstrar uma cadeia lógica completa:
+A resposta final devera demonstrar uma cadeia logica completa:
 
 ```text
 ARQUITETURA
 ↓
 FUNCIONAMENTO GERAL
 ↓
-ALGORITMO-MÃE
+ALGORITMO-MAE
 ↓
 MENSAGERIA
 ↓
-EXCEÇÕES
+EXCECOES
 ↓
 COMANDOS
 ↓
-RECUPERAÇÃO
+RECUPERACAO
 ↓
 AUDITORIA
 ↓
-VALIDAÇÃO
+VALIDACAO
 ```
 
-Não pule diretamente para o resultado final.
+Nao pule diretamente para o resultado final.
 
-Construa o raciocínio progressivamente.
+Construa o raciocinio progressivamente.
 
-O objetivo não é somente produzir um algoritmo que pareça correto.
+O objetivo nao e somente produzir um algoritmo que pareca correto.
 
-O objetivo é produzir uma especificação acadêmica que possa ser compreendida, explicada, defendida e posteriormente implementada por alunos de Sistemas de Informação.
-
-```
-
-## 46.3 Relação entre os dois prompts
-
-O **Prompt 1** estabelece o contexto, o objetivo acadêmico e a metodologia geral. Ele é propositalmente mais corrido e próximo da forma como um aluno de Sistemas de Informação descreveria a necessidade do projeto.
-
-O **Prompt 2** transforma essa necessidade em uma especificação de desenvolvimento mais precisa. Ele define a sequência de análise, as regras de fidelidade ao documento, o tratamento de lacunas, o algoritmo-mãe, a mensageria, os estados, os cinco cenários de exceção, recuperação, segurança, idempotência, deduplicação, auditoria, rastreabilidade e validação final.
-
-Dessa forma, a metodologia segue a cadeia:
-
-```text
-PROMPT-BASE
-    ↓
-COMPREENSÃO DO PROBLEMA
-    ↓
-PROMPT DE DESENVOLVIMENTO
-    ↓
-LEITURA DA ARQUITETURA
-    ↓
-ALGORITMO-MÃE
-    ↓
-PARTE 4 — MENSAGERIA E EXCEÇÕES
-    ↓
-VALIDAÇÃO E CONSOLIDAÇÃO
-    ↓
-README.md
+O objetivo e produzir uma especificacao academica que possa ser compreendida, explicada, defendida e posteriormente implementada por alunos de Sistemas de Informacao.
 ```
 
 ---
 
 ## Fim do Desenvolvimento
 
-**Parte 4 — Mensageria e Exceções**
+**Parte 4 — Mensageria e Excecoes**
 
 **Paradigma:** Edge-first  
-**Modelo:** Mensageria assíncrona e full-duplex  
-**Representação:** Pseudocódigo estruturado  
-**Escopo:** Comunicação, exceções, fallback, recuperação e auditoria
+**Modelo:** Mensageria assincrona e full-duplex  
+**Representacao:** Pseudocodigo estruturado  
+**Escopo:** Comunicacao, excecoes, fallback, recuperacao e auditoria
